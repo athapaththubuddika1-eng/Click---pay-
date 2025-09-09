@@ -42,10 +42,10 @@ input,select{width:100%;padding:8px;margin:6px 0;border-radius:8px;border:none;f
 <!-- Earn Tab -->
 <div id="earn" class="tab active">
 <h2>Click Ads to Earn $0.0001</h2>
-<p>Click button to open Telegram channel. Watch ad 5 sec then claim.</p>
-<button class="earn-btn" onclick="openAd('https://t.me/binananceearn1')">Ad 1 - Binanance Earn</button>
-<button class="earn-btn" onclick="openAd('https://t.me/emoneyweb')">Ad 2 - E-Money Web</button>
-<button class="earn-btn" onclick="openAd('https://t.me/panda_technic')">Ad 3 - Panda Technic</button>
+<p>Click button to open ad link. Wait 5 sec → balance added.</p>
+<button class="earn-btn" onclick="openAd('https://www.revenuecpmgate.com/yc4zy360?key=668ce693eb60fa7cc11dd002b6a3adab')">Ad 1</button>
+<button class="earn-btn" onclick="openAd('https://www.revenuecpmgate.com/ds7h6p686?key=1f2f476c9ca95b3a721183aac2890d9a')">Ad 2</button>
+<button class="earn-btn" onclick="openAd('https://www.revenuecpmgate.com/r9fnmmre1?key=26bdfcbc52f583dbc0080aedcc0b6131')">Ad 3</button>
 </div>
 
 <!-- CAPTCHA Section -->
@@ -128,9 +128,11 @@ generateCaptcha();
 // Ad click function
 function openAd(url){
 window.open(url,'_blank');
+setTimeout(()=>{
 balance+=0.0001;
 updateBalance();
-setTimeout(()=>{alert('Ad clicked! $0.0001 added.')},5000);
+alert('Ad watched! $0.0001 added');
+},5000);
 }
 
 // Verify CAPTCHA
@@ -153,13 +155,16 @@ window.open(url,'_blank');
 document.getElementById('claim-'+name).style.display='block';
 }
 
-// Task claim
+// Task claim + remove
 function claimTask(name){
 if(tasksClaimed[name]){alert('Task already claimed'); return;}
 tasksClaimed[name]=true;
 balance+=0.01;
 updateBalance();
 alert('Task claimed! $0.01 added');
+// remove join button and claim button
+document.getElementById('claim-'+name).previousElementSibling.style.display='none';
+document.getElementById('claim-'+name).style.display='none';
 }
 
 // Copy referral
