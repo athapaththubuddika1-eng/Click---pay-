@@ -3,135 +3,186 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Click Pay - Panda Technic</title>
+<title>Ads Click Pay - Panda Technic</title>
 <style>
-html, body { margin:0; padding:0; width:100%; height:100%; font-family:Arial,sans-serif; background:url('https://images.unsplash.com/photo-1622534055955-1a33b3b6d25f') no-repeat center center fixed; background-size:cover; color:white; overflow-x:hidden; }
-.container { backdrop-filter: blur(10px); background: rgba(0,0,0,0.5); border-radius:12px; padding:20px; width:95%; max-width:480px; margin:20px auto; height:calc(100% - 40px); overflow-y:auto; display:flex; flex-direction:column; }
-h1{text-align:center;margin-bottom:10px;color:#ff9800;}
-.balance-box{font-size:18px;font-weight:bold;text-align:center;margin-bottom:15px;}
-nav{display:flex; justify-content:space-around;margin-bottom:15px;}
+html,body{margin:0;padding:0;width:100%;height:100%;font-family:Arial,sans-serif;
+background:url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e') no-repeat center center fixed;
+background-size:cover;color:white;}
+.container{backdrop-filter:blur(10px);background:rgba(0,0,0,0.5);border-radius:12px;padding:20px;width:95%;max-width:480px;margin:10px auto;height:calc(100% - 20px);overflow-y:auto;display:flex;flex-direction:column;}
+h1{text-align:center;color:#ff9800;margin-bottom:10px;}
+.balance-box{text-align:center;font-size:18px;font-weight:bold;margin-bottom:15px;}
+nav{display:flex;justify-content:space-around;margin-bottom:15px;}
 nav button{flex:1;margin:0 5px;padding:10px;border:none;border-radius:8px;background:#ff9800;color:white;cursor:pointer;}
 nav button.active{background:#f57c00;}
 .tab{display:none;flex-direction:column;flex:1;overflow-y:auto;}
 .tab.active{display:flex;animation:fadeIn 0.5s ease;}
-@keyframes fadeIn{from{opacity:0;} to{opacity:1;}}
-.earn-btn, .claim-btn, .withdraw-btn{display:block;width:100%;padding:12px;margin:8px 0;border:none;border-radius:8px;font-size:16px;cursor:pointer;}
+@keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
+.earn-btn,.claim-btn,.withdraw-btn{display:block;width:100%;padding:12px;margin:8px 0;border:none;border-radius:8px;font-size:16px;cursor:pointer;}
 .earn-btn{background:#4caf50;color:white;}
 .claim-btn{background:#28a745;color:white;}
 .withdraw-btn{background:#ff9800;color:white;}
-input, select{width:100%;padding:10px;margin:8px 0;border-radius:8px;border:none;font-size:16px;}
-.task-link{color:#ffeb3b;font-weight:bold;text-decoration:none;}
+input,select{width:100%;padding:10px;margin:8px 0;border-radius:8px;border:none;font-size:16px;}
+.task-link{text-decoration:none;color:#ffeb3b;font-weight:bold;}
 .history{font-size:14px;margin-top:10px;}
+.captcha-container{margin:10px 0;padding:10px;background:rgba(255,255,255,0.1);border-radius:8px;text-align:center;}
+.captcha-input{width:100%;padding:10px;margin:10px 0;border-radius:8px;border:none;font-size:16px;text-align:center;}
 </style>
 </head>
 <body>
 <div class="container">
-  <h1>Click Pay - Panda Technic</h1>
-  <div class="balance-box">Balance: $<span id="balance">0.00</span></div>
-  <nav>
-    <button onclick="showTab('earn')" class="active">Earn</button>
-    <button onclick="showTab('tasks')">Tasks</button>
-    <button onclick="showTab('referral')">Referral</button>
-    <button onclick="showTab('withdraw')">Withdraw</button>
-  </nav>
+<h1>Ads Click Pay - Panda Technic</h1>
+<div class="balance-box">Balance: $<span id="balance">0.0000</span></div>
+<nav>
+<button onclick="showTab('earn')" class="active">Earn</button>
+<button onclick="showTab('tasks')">Tasks</button>
+<button onclick="showTab('referral')">Referral</button>
+<button onclick="showTab('withdraw')">Withdraw</button>
+</nav>
 
-  <!-- Earn Tab -->
-  <div id="earn" class="tab active">
-    <h2>Click Ads & Earn</h2>
-    <button class="earn-btn" onclick="clickAd('https://www.revenuecpmgate.com/yc4zy360?key=668ce693eb60fa7cc11dd002b6a3adab')">Ad 1 - $0.0002</button>
-    <button class="earn-btn" onclick="clickAd('https://www.revenuecpmgate.com/ds7h6p686?key=1f2f476c9ca95b3a721183aac2890d9a')">Ad 2 - $0.0002</button>
-    <button class="earn-btn" onclick="clickAd('https://www.revenuecpmgate.com/r9fnmmre1?key=26bdfcbc52f583dbc0080aedcc0b6131')">Ad 3 - $0.0002</button>
-    <p>Watch 5 sec then return. Unlimited clicks allowed.</p>
-  </div>
+<!-- Earn Tab -->
+<div id="earn" class="tab active">
+<h2>Click Ads & Earn with CAPTCHA</h2>
+<p>Watch the ad 5 sec and solve CAPTCHA to earn $0.00025</p>
+<button class="earn-btn" onclick="openAd('https://www.revenuecpmgate.com/yc4zy360?key=668ce693eb60fa7cc11dd002b6a3adab')">Ad 1</button>
+<button class="earn-btn" onclick="openAd('https://www.revenuecpmgate.com/ds7h6p686?key=1f2f476c9ca95b3a721183aac2890d9a')">Ad 2</button>
+<button class="earn-btn" onclick="openAd('https://www.revenuecpmgate.com/r9fnmmre1?key=26bdfcbc52f583dbc0080aedcc0b6131')">Ad 3</button>
 
-  <!-- Tasks Tab -->
-  <div id="tasks" class="tab">
-    <h2>Join Channels & Earn</h2>
-    <div>
-      <p><a href="https://t.me/binananceearn1" target="_blank" class="task-link">Binanance Earn</a> - $0.01</p>
-      <button class="claim-btn" onclick="claimTask('binanance')">Claim</button>
-    </div>
-    <div>
-      <p><a href="https://t.me/emoneyweb" target="_blank" class="task-link">E-Money Web</a> - $0.01</p>
-      <button class="claim-btn" onclick="claimTask('emoney')">Claim</button>
-    </div>
-    <div>
-      <p><a href="https://t.me/panda_technic" target="_blank" class="task-link">Panda Technic</a> - $0.01</p>
-      <button class="claim-btn" onclick="claimTask('panda')">Claim</button>
-    </div>
-  </div>
+<div class="captcha-container">
+<p>Solve CAPTCHA to claim reward:</p>
+<div id="captchaCode" style="font-weight:bold;font-size:20px;letter-spacing:4px;"></div>
+<input type="text" id="captchaInput" class="captcha-input" placeholder="Enter code here">
+<button class="claim-btn" onclick="verifyCaptcha()">Submit CAPTCHA</button>
+</div>
+</div>
 
-  <!-- Referral Tab -->
-  <div id="referral" class="tab">
-    <h2>Referral System</h2>
-    <p>Invite friends and earn $0.01 per referral.</p>
-    <input type="text" id="refLink" value="https://t.me/yourbot?start=USER123" readonly>
-    <button class="claim-btn" onclick="copyRef()">Copy Link</button>
-  </div>
+<!-- Tasks Tab -->
+<div id="tasks" class="tab">
+<h2>Join Channels & Earn</h2>
+<div>
+<p><a href="https://t.me/binananceearn1" target="_blank" class="task-link">Binanance Earn</a> - $0.01</p>
+<button class="claim-btn" onclick="claimTask('binanance')">Claim</button>
+</div>
+<div>
+<p><a href="https://t.me/emoneyweb" target="_blank" class="task-link">E-Money Web</a> - $0.01</p>
+<button class="claim-btn" onclick="claimTask('emoney')">Claim</button>
+</div>
+<div>
+<p><a href="https://t.me/panda_technic" target="_blank" class="task-link">Panda Technic</a> - $0.01</p>
+<button class="claim-btn" onclick="claimTask('panda')">Claim</button>
+</div>
+</div>
 
-  <!-- Withdraw Tab -->
-  <div id="withdraw" class="tab">
-    <h2>Withdraw</h2>
-    <input type="number" id="withdrawAmount" placeholder="Enter amount (Min $0.5)">
-    <select id="withdrawMethod">
-      <option value="binance">Binance ID</option>
-      <option value="pol">POL Coin Address</option>
-    </select>
-    <input type="text" id="walletAddress" placeholder="Enter Binance ID or POL Address">
-    <button class="withdraw-btn" onclick="withdraw()">Withdraw</button>
-    <div class="history" id="history"><h3>Withdraw History:</h3></div>
-  </div>
+<!-- Referral Tab -->
+<div id="referral" class="tab">
+<h2>Referral System</h2>
+<p>Invite friends and earn $0.01 per referral.</p>
+<input type="text" id="refLink" value="https://t.me/yourbot?start=USER123" readonly>
+<button class="claim-btn" onclick="copyRef()">Copy Link</button>
+</div>
+
+<!-- Withdraw Tab -->
+<div id="withdraw" class="tab">
+<h2>Withdraw</h2>
+<input type="number" id="withdrawAmount" placeholder="Enter amount (Min $0.5)">
+<select id="withdrawMethod">
+<option value="binance">Binance ID</option>
+<option value="pol">POL Coin Address</option>
+</select>
+<input type="text" id="walletAddress" placeholder="Enter Binance ID or POL Address">
+<button class="withdraw-btn" onclick="withdraw()">Withdraw</button>
+<div class="history" id="history"><h3>Withdraw History:</h3></div>
+</div>
 </div>
 
 <script>
-// Tab switching
+// Tabs
 function showTab(tabId){
-  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
-  document.querySelectorAll('nav button').forEach(b=>b.classList.remove('active'));
-  document.getElementById(tabId).classList.add('active');
-  event.target.classList.add('active');
+document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+document.querySelectorAll('nav button').forEach(b=>b.classList.remove('active'));
+document.getElementById(tabId).classList.add('active');
+event.target.classList.add('active');
 }
 
 // Balance
-let balance = 0;
-let clickedAds = {};
-let tasksClaimed = {};
-let withdrawHistory = [];
+let balance=0;
+let tasksClaimed={};
+let withdrawHistory=[];
+updateBalance();
 
-// Ads click (unlimited)
-function clickAd(url){
-  window.open(url,'_blank');
-  setTimeout(()=>{
-    balance += 0.0002;
-    document.getElementById('balance').textContent = balance.toFixed(4);
-    alert('Ad claimed! Balance: $'+balance.toFixed(4));
-  },5000);
+// CAPTCHA
+let currentCaptcha='';
+function generateCaptcha(){
+let chars='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+let captcha='';
+for(let i=0;i<6;i++){captcha+=chars.charAt(Math.floor(Math.random()*chars.length));}
+currentCaptcha=captcha;
+document.getElementById('captchaCode').textContent=captcha;
+}
+generateCaptcha();
+
+// Ads click with 5 sec wait
+let adOpened=false;
+function openAd(url){
+window.open(url,'_blank');
+adOpened=true;
+setTimeout(()=>{
+alert('Ad watched! Now solve CAPTCHA to claim $0.00025');
+},5000);
 }
 
-// Task claim (once per session)
+// Verify CAPTCHA and add money only if ad was opened
+function verifyCaptcha(){
+let input=document.getElementById('captchaInput').value.trim().toUpperCase();
+if(!adOpened){ alert('Please click an ad first'); return; }
+if(input===currentCaptcha){
+balance+=0.00025;
+updateBalance();
+alert('CAPTCHA correct! $0.00025 added.');
+document.getElementById('captchaInput').value='';
+generateCaptcha();
+adOpened=false; // reset
+}else{ alert('Incorrect CAPTCHA. Try again.'); }
+}
+
+function updateBalance(){document.getElementById('balance').textContent=balance.toFixed(5);}
+
+// Task claim
 function claimTask(name){
-  if(tasksClaimed[name]){ alert('Task already claimed.'); return; }
-  tasksClaimed[name]=true;
-  balance += 0.01;
-  document.getElementById('balance').textContent = balance.toFixed(2);
-  alert('Task claimed! Balance: $'+balance.toFixed(2));
+if(tasksClaimed[name]){alert('Task already claimed'); return;}
+tasksClaimed[name]=true;
+balance+=0.01;
+updateBalance();
+alert('Task claimed! $0.01 added');
 }
 
 // Copy referral
 function copyRef(){
-  let ref = document.getElementById('refLink');
-  ref.select();
-  navigator.clipboard.writeText(ref.value);
-  alert('Referral link copied!');
+let ref=document.getElementById('refLink');
+ref.select();
+navigator.clipboard.writeText(ref.value);
+alert('Referral link copied!');
 }
 
 // Withdraw
 function withdraw(){
-  const amount=parseFloat(document.getElementById('withdrawAmount').value);
-  const method=document.getElementById('withdrawMethod').value;
-  const address=document.getElementById('walletAddress').value;
-  if(amount<0.5 || !address){ alert('Min withdraw $0.5 and valid address required'); return; }
-  withdrawHistory.push(`${amount}$ via ${method.toUpperCase()} - ${address}`);
-  document.getElementById('history').innerHTML='<h3>Withdraw History:</h3>'+withdrawHistory.map(x=>'<p>'+x+'</p>').join('');
+const amount=parseFloat(document.getElementById('withdrawAmount').value);
+const method=document.getElementById('withdrawMethod').value;
+const address=document.getElementById('walletAddress').value;
+if(amount<0.5||!address){alert('Min withdraw $0.5 and valid address required'); return;}
+withdrawHistory.push(`${amount}$ via ${method.toUpperCase()} - ${address}`);
+document.getElementById('history').innerHTML='<h3>Withdraw History:</h3>'+withdrawHistory.map(x=>'<p>'+x+'</p>').join('');
 
-  // Telegram bot notification
+// Telegram bot notification
+const BOT_TOKEN="7437326664:AAGpM5JQ6gHgJ0dpyhQHD-2-XoRE9dcsfaI";
+const CHAT_ID="@payment1267";
+fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`,{
+method:"POST",
+headers:{'Content-Type':'application/json'},
+body:JSON.stringify({chat_id:CHAT_ID,text:`Withdraw Request\nAmount: $${amount}\nMethod: ${method}\nAddress: ${address}`})
+});
+
+alert('Withdraw request sent!');
+}
+</script>
+</body>
+</html>
