@@ -8,24 +8,25 @@
 html,body{margin:0;padding:0;width:100%;height:100%;font-family:Arial,sans-serif;
 background:url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e') no-repeat center center fixed;
 background-size:cover;color:white;}
-.container{backdrop-filter:blur(10px);background:rgba(0,0,0,0.5);border-radius:12px;padding:20px;width:95%;max-width:480px;margin:10px auto;height:calc(100% - 20px);overflow-y:auto;display:flex;flex-direction:column;}
-h1{text-align:center;color:#ff9800;margin-bottom:10px;}
-.balance-box{text-align:center;font-size:18px;font-weight:bold;margin-bottom:15px;}
-nav{display:flex;justify-content:space-around;margin-bottom:15px;}
-nav button{flex:1;margin:0 5px;padding:10px;border:none;border-radius:8px;background:#ff9800;color:white;cursor:pointer;}
+.container{backdrop-filter:blur(10px);background:rgba(0,0,0,0.5);border-radius:12px;padding:15px;width:90%;max-width:400px;margin:10px auto;height:calc(100% - 20px);overflow-y:auto;display:flex;flex-direction:column;}
+h1{text-align:center;color:#ff9800;margin-bottom:10px;font-size:22px;}
+.balance-box{text-align:center;font-size:16px;font-weight:bold;margin-bottom:12px;}
+nav{display:flex;justify-content:space-around;margin-bottom:12px;}
+nav button{flex:1;margin:0 3px;padding:8px;border:none;border-radius:8px;background:#ff9800;color:white;cursor:pointer;font-size:14px;}
 nav button.active{background:#f57c00;}
 .tab{display:none;flex-direction:column;flex:1;overflow-y:auto;}
 .tab.active{display:flex;animation:fadeIn 0.5s ease;}
 @keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
-.earn-btn,.claim-btn,.withdraw-btn{display:block;width:100%;padding:12px;margin:8px 0;border:none;border-radius:8px;font-size:16px;cursor:pointer;}
+.earn-btn,.claim-btn,.withdraw-btn,.join-btn{display:block;width:100%;padding:10px;margin:6px 0;border:none;border-radius:8px;font-size:14px;cursor:pointer;}
 .earn-btn{background:#4caf50;color:white;}
 .claim-btn{background:#28a745;color:white;}
+.join-btn{background:#03a9f4;color:white;}
 .withdraw-btn{background:#ff9800;color:white;}
-input,select{width:100%;padding:10px;margin:8px 0;border-radius:8px;border:none;font-size:16px;}
+input,select{width:100%;padding:8px;margin:6px 0;border-radius:8px;border:none;font-size:14px;}
 .task-link{text-decoration:none;color:#ffeb3b;font-weight:bold;}
-.history{font-size:14px;margin-top:10px;}
-.captcha-container{margin:10px 0;padding:10px;background:rgba(255,255,255,0.1);border-radius:8px;text-align:center;}
-.captcha-input{width:100%;padding:10px;margin:10px 0;border-radius:8px;border:none;font-size:16px;text-align:center;}
+.history{font-size:12px;margin-top:10px;}
+.captcha-container{margin:8px 0;padding:8px;background:rgba(255,255,255,0.1);border-radius:8px;text-align:center;}
+.captcha-input{width:100%;padding:8px;margin:6px 0;border-radius:8px;border:none;font-size:14px;text-align:center;}
 </style>
 </head>
 <body>
@@ -42,14 +43,14 @@ input,select{width:100%;padding:10px;margin:8px 0;border-radius:8px;border:none;
 <!-- Earn Tab -->
 <div id="earn" class="tab active">
 <h2>Click Ads & Earn with CAPTCHA</h2>
-<p>Watch the ad 5 sec and solve CAPTCHA to earn $0.00025</p>
+<p>Watch ad 5 sec then solve CAPTCHA to claim reward</p>
 <button class="earn-btn" onclick="openAd('https://www.revenuecpmgate.com/yc4zy360?key=668ce693eb60fa7cc11dd002b6a3adab')">Ad 1</button>
 <button class="earn-btn" onclick="openAd('https://www.revenuecpmgate.com/ds7h6p686?key=1f2f476c9ca95b3a721183aac2890d9a')">Ad 2</button>
 <button class="earn-btn" onclick="openAd('https://www.revenuecpmgate.com/r9fnmmre1?key=26bdfcbc52f583dbc0080aedcc0b6131')">Ad 3</button>
 
 <div class="captcha-container">
 <p>Solve CAPTCHA to claim reward:</p>
-<div id="captchaCode" style="font-weight:bold;font-size:20px;letter-spacing:4px;"></div>
+<div id="captchaCode" style="font-weight:bold;font-size:18px;letter-spacing:4px;"></div>
 <input type="text" id="captchaInput" class="captcha-input" placeholder="Enter code here">
 <button class="claim-btn" onclick="verifyCaptcha()">Submit CAPTCHA</button>
 </div>
@@ -59,16 +60,19 @@ input,select{width:100%;padding:10px;margin:8px 0;border-radius:8px;border:none;
 <div id="tasks" class="tab">
 <h2>Join Channels & Earn</h2>
 <div>
-<p><a href="https://t.me/binananceearn1" target="_blank" class="task-link">Binanance Earn</a> - $0.01</p>
-<button class="claim-btn" onclick="claimTask('binanance')">Claim</button>
+<p>Binanance Earn - $0.01</p>
+<button class="join-btn" onclick="joinChannel('binanance')">Join</button>
+<button class="claim-btn" id="claim-binanance" style="display:none;" onclick="claimTask('binanance')">Claim</button>
 </div>
 <div>
-<p><a href="https://t.me/emoneyweb" target="_blank" class="task-link">E-Money Web</a> - $0.01</p>
-<button class="claim-btn" onclick="claimTask('emoney')">Claim</button>
+<p>E-Money Web - $0.01</p>
+<button class="join-btn" onclick="joinChannel('emoney')">Join</button>
+<button class="claim-btn" id="claim-emoney" style="display:none;" onclick="claimTask('emoney')">Claim</button>
 </div>
 <div>
-<p><a href="https://t.me/panda_technic" target="_blank" class="task-link">Panda Technic</a> - $0.01</p>
-<button class="claim-btn" onclick="claimTask('panda')">Claim</button>
+<p>Panda Technic - $0.01</p>
+<button class="join-btn" onclick="joinChannel('panda')">Join</button>
+<button class="claim-btn" id="claim-panda" style="display:none;" onclick="claimTask('panda')">Claim</button>
 </div>
 </div>
 
@@ -125,9 +129,7 @@ let adOpened=false;
 function openAd(url){
 window.open(url,'_blank');
 adOpened=true;
-setTimeout(()=>{
-alert('Ad watched! Now solve CAPTCHA to claim $0.00025');
-},5000);
+setTimeout(()=>{alert('Ad watched! Now solve CAPTCHA to claim $0.00015');},5000);
 }
 
 // Verify CAPTCHA and add money only if ad was opened
@@ -135,9 +137,9 @@ function verifyCaptcha(){
 let input=document.getElementById('captchaInput').value.trim().toUpperCase();
 if(!adOpened){ alert('Please click an ad first'); return; }
 if(input===currentCaptcha){
-balance+=0.00025;
+balance+=0.00015;
 updateBalance();
-alert('CAPTCHA correct! $0.00025 added.');
+alert('CAPTCHA correct! $0.00015 added.');
 document.getElementById('captchaInput').value='';
 generateCaptcha();
 adOpened=false; // reset
@@ -146,7 +148,12 @@ adOpened=false; // reset
 
 function updateBalance(){document.getElementById('balance').textContent=balance.toFixed(5);}
 
-// Task claim
+// Task join and claim
+function joinChannel(name){
+alert('Please join the channel now');
+document.getElementById('claim-'+name).style.display='block';
+}
+
 function claimTask(name){
 if(tasksClaimed[name]){alert('Task already claimed'); return;}
 tasksClaimed[name]=true;
