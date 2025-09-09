@@ -17,13 +17,12 @@ nav button.active{background:#f57c00;}
 .tab{display:none;flex-direction:column;flex:1;overflow-y:auto;}
 .tab.active{display:flex;animation:fadeIn 0.5s ease;}
 @keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
-.earn-btn,.claim-btn,.withdraw-btn,.join-btn{display:block;width:100%;padding:10px;margin:6px 0;border:none;border-radius:8px;font-size:14px;cursor:pointer;}
+button{display:block;width:100%;padding:10px;margin:6px 0;border:none;border-radius:8px;font-size:14px;cursor:pointer;}
 .earn-btn{background:#4caf50;color:white;}
 .claim-btn{background:#28a745;color:white;}
 .join-btn{background:#03a9f4;color:white;}
 .withdraw-btn{background:#ff9800;color:white;}
 input,select{width:100%;padding:8px;margin:6px 0;border-radius:8px;border:none;font-size:14px;}
-.task-link{text-decoration:none;color:#ffeb3b;font-weight:bold;}
 .history{font-size:12px;margin-top:10px;}
 .captcha-container{margin:8px 0;padding:8px;background:rgba(255,255,255,0.1);border-radius:8px;text-align:center;}
 .captcha-input{width:100%;padding:8px;margin:6px 0;border-radius:8px;border:none;font-size:14px;text-align:center;}
@@ -42,36 +41,38 @@ input,select{width:100%;padding:8px;margin:6px 0;border-radius:8px;border:none;f
 
 <!-- Earn Tab -->
 <div id="earn" class="tab active">
-<h2>Click Ads & Earn with CAPTCHA</h2>
-<p>Watch ad 5 sec then solve CAPTCHA to claim reward</p>
-<button class="earn-btn" onclick="openAd('https://www.revenuecpmgate.com/yc4zy360?key=668ce693eb60fa7cc11dd002b6a3adab')">Ad 1</button>
-<button class="earn-btn" onclick="openAd('https://www.revenuecpmgate.com/ds7h6p686?key=1f2f476c9ca95b3a721183aac2890d9a')">Ad 2</button>
-<button class="earn-btn" onclick="openAd('https://www.revenuecpmgate.com/r9fnmmre1?key=26bdfcbc52f583dbc0080aedcc0b6131')">Ad 3</button>
+<h2>Click Ads to Earn $0.0001</h2>
+<p>Click button to open Telegram channel. Watch ad 5 sec then claim.</p>
+<button class="earn-btn" onclick="openAd('https://t.me/binananceearn1')">Ad 1 - Binanance Earn</button>
+<button class="earn-btn" onclick="openAd('https://t.me/emoneyweb')">Ad 2 - E-Money Web</button>
+<button class="earn-btn" onclick="openAd('https://t.me/panda_technic')">Ad 3 - Panda Technic</button>
+</div>
 
+<!-- CAPTCHA Section -->
 <div class="captcha-container">
+<h3>CAPTCHA Section - Earn $0.00015</h3>
 <p>Solve CAPTCHA to claim reward:</p>
 <div id="captchaCode" style="font-weight:bold;font-size:18px;letter-spacing:4px;"></div>
 <input type="text" id="captchaInput" class="captcha-input" placeholder="Enter code here">
 <button class="claim-btn" onclick="verifyCaptcha()">Submit CAPTCHA</button>
 </div>
-</div>
 
 <!-- Tasks Tab -->
 <div id="tasks" class="tab">
-<h2>Join Channels & Earn</h2>
+<h2>Join Channels & Earn $0.01</h2>
 <div>
-<p>Binanance Earn - $0.01</p>
-<button class="join-btn" onclick="joinChannel('binanance')">Join</button>
+<p>Binanance Earn</p>
+<button class="join-btn" onclick="joinChannel('binanance','https://t.me/binananceearn1')">Join</button>
 <button class="claim-btn" id="claim-binanance" style="display:none;" onclick="claimTask('binanance')">Claim</button>
 </div>
 <div>
-<p>E-Money Web - $0.01</p>
-<button class="join-btn" onclick="joinChannel('emoney')">Join</button>
+<p>E-Money Web</p>
+<button class="join-btn" onclick="joinChannel('emoney','https://t.me/emoneyweb')">Join</button>
 <button class="claim-btn" id="claim-emoney" style="display:none;" onclick="claimTask('emoney')">Claim</button>
 </div>
 <div>
-<p>Panda Technic - $0.01</p>
-<button class="join-btn" onclick="joinChannel('panda')">Join</button>
+<p>Panda Technic</p>
+<button class="join-btn" onclick="joinChannel('panda','https://t.me/panda_technic')">Join</button>
 <button class="claim-btn" id="claim-panda" style="display:none;" onclick="claimTask('panda')">Claim</button>
 </div>
 </div>
@@ -124,36 +125,35 @@ document.getElementById('captchaCode').textContent=captcha;
 }
 generateCaptcha();
 
-// Ads click with 5 sec wait
-let adOpened=false;
+// Ad click function
 function openAd(url){
 window.open(url,'_blank');
-adOpened=true;
-setTimeout(()=>{alert('Ad watched! Now solve CAPTCHA to claim $0.00015');},5000);
+balance+=0.0001;
+updateBalance();
+setTimeout(()=>{alert('Ad clicked! $0.0001 added.')},5000);
 }
 
-// Verify CAPTCHA and add money only if ad was opened
+// Verify CAPTCHA
 function verifyCaptcha(){
 let input=document.getElementById('captchaInput').value.trim().toUpperCase();
-if(!adOpened){ alert('Please click an ad first'); return; }
 if(input===currentCaptcha){
 balance+=0.00015;
 updateBalance();
 alert('CAPTCHA correct! $0.00015 added.');
 document.getElementById('captchaInput').value='';
 generateCaptcha();
-adOpened=false; // reset
 }else{ alert('Incorrect CAPTCHA. Try again.'); }
 }
 
 function updateBalance(){document.getElementById('balance').textContent=balance.toFixed(5);}
 
-// Task join and claim
-function joinChannel(name){
-alert('Please join the channel now');
+// Task join
+function joinChannel(name,url){
+window.open(url,'_blank');
 document.getElementById('claim-'+name).style.display='block';
 }
 
+// Task claim
 function claimTask(name){
 if(tasksClaimed[name]){alert('Task already claimed'); return;}
 tasksClaimed[name]=true;
