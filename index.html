@@ -5,94 +5,74 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Click Pay - Panda Technic</title>
 <style>
-body {
-  margin: 0;
-  font-family: Arial, sans-serif;
-  background: url('https://images.unsplash.com/photo-1622534055955-1a33b3b6d25f') no-repeat center center fixed;
-  background-size: cover;
-  color: white;
-}
-.container {
-  backdrop-filter: blur(8px);
-  background: rgba(0,0,0,0.5);
-  padding: 20px;
-  border-radius: 12px;
-  max-width: 400px;
-  margin: auto;
-  margin-top: 50px;
-  text-align: center;
-}
-h1 {
-  margin-bottom: 20px;
-  color: #ff9800;
-}
-nav {
-  display: flex;
-  justify-content: space-around;
-  margin-bottom: 20px;
-}
-nav button {
-  background: #ff9800;
-  color: white;
-  border: none;
-  padding: 10px;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 14px;
-}
-nav button.active {
-  background: #f57c00;
-}
-.tab { display: none; }
-.tab.active { display: block; animation: fadeIn 0.5s ease; }
-@keyframes fadeIn { from {opacity:0;} to{opacity:1;} }
-.earn-btn { display: block; margin:10px 0; padding:12px; background:#4caf50; color:white; border:none; border-radius:8px; cursor:pointer; }
-.task-link { display:block; margin:8px 0; color:#ffeb3b; font-weight:bold; }
-input, select { width:100%; padding:10px; margin:10px 0; border-radius:8px; border:none; }
-.withdraw-btn { background:#ff9800; padding:12px; width:100%; border:none; border-radius:8px; font-size:16px; color:white; cursor:pointer; }
-.history { text-align:left; margin-top:10px; font-size:14px; }
-.claim-btn { background:#28a745; padding:8px 12px; border:none; border-radius:6px; color:white; cursor:pointer; }
+html, body { margin:0; padding:0; width:100%; height:100%; font-family:Arial,sans-serif; background:url('https://images.unsplash.com/photo-1622534055955-1a33b3b6d25f') no-repeat center center fixed; background-size:cover; color:white; overflow-x:hidden; }
+.container { backdrop-filter: blur(10px); background: rgba(0,0,0,0.5); border-radius:12px; padding:20px; width:95%; max-width:480px; margin:20px auto; height:calc(100% - 40px); overflow-y:auto; display:flex; flex-direction:column; }
+h1{text-align:center;margin-bottom:10px;color:#ff9800;}
+.balance-box{font-size:18px;font-weight:bold;text-align:center;margin-bottom:15px;}
+nav{display:flex; justify-content:space-around;margin-bottom:15px;}
+nav button{flex:1;margin:0 5px;padding:10px;border:none;border-radius:8px;background:#ff9800;color:white;cursor:pointer;}
+nav button.active{background:#f57c00;}
+.tab{display:none;flex-direction:column;flex:1;overflow-y:auto;}
+.tab.active{display:flex;animation:fadeIn 0.5s ease;}
+@keyframes fadeIn{from{opacity:0;} to{opacity:1;}}
+.earn-btn, .claim-btn, .withdraw-btn{display:block;width:100%;padding:12px;margin:8px 0;border:none;border-radius:8px;font-size:16px;cursor:pointer;}
+.earn-btn{background:#4caf50;color:white;}
+.claim-btn{background:#28a745;color:white;}
+.withdraw-btn{background:#ff9800;color:white;}
+input, select{width:100%;padding:10px;margin:8px 0;border-radius:8px;border:none;font-size:16px;}
+.task-link{color:#ffeb3b;font-weight:bold;text-decoration:none;}
+.history{font-size:14px;margin-top:10px;}
 </style>
 </head>
 <body>
 <div class="container">
-  <h1>Click Pay</h1>
+  <h1>Click Pay - Panda Technic</h1>
+  <div class="balance-box">Balance: $<span id="balance">0.00</span></div>
   <nav>
     <button onclick="showTab('earn')" class="active">Earn</button>
     <button onclick="showTab('tasks')">Tasks</button>
+    <button onclick="showTab('referral')">Referral</button>
     <button onclick="showTab('withdraw')">Withdraw</button>
   </nav>
 
   <!-- Earn Tab -->
   <div id="earn" class="tab active">
-    <h2>Click & Earn</h2>
-    <button class="earn-btn" onclick="openAd('https://www.revenuecpmgate.com/yc4zy360?key=668ce693eb60fa7cc11dd002b6a3adab')">Click Ad 1</button>
-    <button class="earn-btn" onclick="openAd('https://www.revenuecpmgate.com/ds7h6p686?key=1f2f476c9ca95b3a721183aac2890d9a')">Click Ad 2</button>
-    <button class="earn-btn" onclick="openAd('https://www.revenuecpmgate.com/r9fnmmre1?key=26bdfcbc52f583dbc0080aedcc0b6131')">Click Ad 3</button>
-    <p>Each click gives $0.0002 after watching 5 sec.</p>
+    <h2>Click Ads & Earn</h2>
+    <button class="earn-btn" onclick="clickAd('https://www.revenuecpmgate.com/yc4zy360?key=668ce693eb60fa7cc11dd002b6a3adab')">Ad 1 - $0.0002</button>
+    <button class="earn-btn" onclick="clickAd('https://www.revenuecpmgate.com/ds7h6p686?key=1f2f476c9ca95b3a721183aac2890d9a')">Ad 2 - $0.0002</button>
+    <button class="earn-btn" onclick="clickAd('https://www.revenuecpmgate.com/r9fnmmre1?key=26bdfcbc52f583dbc0080aedcc0b6131')">Ad 3 - $0.0002</button>
+    <p>Watch 5 sec then return. Unlimited clicks allowed.</p>
   </div>
 
   <!-- Tasks Tab -->
   <div id="tasks" class="tab">
     <h2>Join Channels & Earn</h2>
-    <div class="task">
-      <p>Join <a href="https://t.me/binananceearn1" target="_blank">Binanance Earn</a> - $0.01</p>
+    <div>
+      <p><a href="https://t.me/binananceearn1" target="_blank" class="task-link">Binanance Earn</a> - $0.01</p>
       <button class="claim-btn" onclick="claimTask('binanance')">Claim</button>
     </div>
-    <div class="task">
-      <p>Join <a href="https://t.me/emoneyweb" target="_blank">E-Money Web</a> - $0.01</p>
+    <div>
+      <p><a href="https://t.me/emoneyweb" target="_blank" class="task-link">E-Money Web</a> - $0.01</p>
       <button class="claim-btn" onclick="claimTask('emoney')">Claim</button>
     </div>
-    <div class="task">
-      <p>Join <a href="https://t.me/panda_technic" target="_blank">Panda Technic</a> - $0.01</p>
+    <div>
+      <p><a href="https://t.me/panda_technic" target="_blank" class="task-link">Panda Technic</a> - $0.01</p>
       <button class="claim-btn" onclick="claimTask('panda')">Claim</button>
     </div>
+  </div>
+
+  <!-- Referral Tab -->
+  <div id="referral" class="tab">
+    <h2>Referral System</h2>
+    <p>Invite friends and earn $0.01 per referral.</p>
+    <input type="text" id="refLink" value="https://t.me/yourbot?start=USER123" readonly>
+    <button class="claim-btn" onclick="copyRef()">Copy Link</button>
   </div>
 
   <!-- Withdraw Tab -->
   <div id="withdraw" class="tab">
     <h2>Withdraw</h2>
-    <input type="text" id="withdrawAmount" placeholder="Enter Amount (Min $0.5)">
+    <input type="number" id="withdrawAmount" placeholder="Enter amount (Min $0.5)">
     <select id="withdrawMethod">
       <option value="binance">Binance ID</option>
       <option value="pol">POL Coin Address</option>
@@ -104,55 +84,54 @@ input, select { width:100%; padding:10px; margin:10px 0; border-radius:8px; bord
 </div>
 
 <script>
-let clickedAds = {};
-let tasksClaimed = {};
-let balance = 0;
-let withdrawHistory = [];
-
+// Tab switching
 function showTab(tabId){
-  document.querySelectorAll('.tab').forEach(tab=>tab.classList.remove('active'));
-  document.querySelectorAll('nav button').forEach(btn=>btn.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('nav button').forEach(b=>b.classList.remove('active'));
   document.getElementById(tabId).classList.add('active');
   event.target.classList.add('active');
 }
 
-function openAd(url){
-  if(clickedAds[url]) { alert('Already claimed this ad.'); return; }
+// Balance
+let balance = 0;
+let clickedAds = {};
+let tasksClaimed = {};
+let withdrawHistory = [];
+
+// Ads click (unlimited)
+function clickAd(url){
   window.open(url,'_blank');
   setTimeout(()=>{
     balance += 0.0002;
-    clickedAds[url]=true;
+    document.getElementById('balance').textContent = balance.toFixed(4);
     alert('Ad claimed! Balance: $'+balance.toFixed(4));
-  }, 5000); // 5 seconds
+  },5000);
 }
 
+// Task claim (once per session)
 function claimTask(name){
-  if(tasksClaimed[name]) { alert('Task already claimed.'); return; }
+  if(tasksClaimed[name]){ alert('Task already claimed.'); return; }
   tasksClaimed[name]=true;
   balance += 0.01;
+  document.getElementById('balance').textContent = balance.toFixed(2);
   alert('Task claimed! Balance: $'+balance.toFixed(2));
 }
 
-function withdraw(){
-  const amount = parseFloat(document.getElementById('withdrawAmount').value);
-  const method = document.getElementById('withdrawMethod').value;
-  const address = document.getElementById('walletAddress').value;
-  if(amount < 0.5 || !address){ alert('Min withdraw $0.5 and valid address required.'); return; }
-
-  withdrawHistory.push(`${amount}$ via ${method.toUpperCase()} - ${address}`);
-  document.getElementById('history').innerHTML = '<h3>Withdraw History:</h3>' + withdrawHistory.map(x=>'<p>'+x+'</p>').join('');
-
-  // Telegram Bot Notification
-  const BOT_TOKEN = "7437326664:AAGpM5JQ6gHgJ0dpyhQHD-2-XoRE9dcsfaI";
-  const CHAT_ID = "@payment1267";
-  fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`,{
-    method:"POST",
-    headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({chat_id:CHAT_ID, text:`Withdraw Request\nAmount: $${amount}\nMethod: ${method}\nAddress: ${address}`})
-  });
-
-  alert('Withdraw request sent!');
+// Copy referral
+function copyRef(){
+  let ref = document.getElementById('refLink');
+  ref.select();
+  navigator.clipboard.writeText(ref.value);
+  alert('Referral link copied!');
 }
-</script>
-</body>
-</html>
+
+// Withdraw
+function withdraw(){
+  const amount=parseFloat(document.getElementById('withdrawAmount').value);
+  const method=document.getElementById('withdrawMethod').value;
+  const address=document.getElementById('walletAddress').value;
+  if(amount<0.5 || !address){ alert('Min withdraw $0.5 and valid address required'); return; }
+  withdrawHistory.push(`${amount}$ via ${method.toUpperCase()} - ${address}`);
+  document.getElementById('history').innerHTML='<h3>Withdraw History:</h3>'+withdrawHistory.map(x=>'<p>'+x+'</p>').join('');
+
+  // Telegram bot notification
