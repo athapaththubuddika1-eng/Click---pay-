@@ -46,7 +46,6 @@ input,select{width:100%;padding:8px;margin:6px 0;border-radius:8px;border:none;f
 <button class="earn-btn" onclick="openAd('https://www.revenuecpmgate.com/yc4zy360?key=668ce693eb60fa7cc11dd002b6a3adab')">Ad 1</button>
 <button class="earn-btn" onclick="openAd('https://www.revenuecpmgate.com/ds7h6p686?key=1f2f476c9ca95b3a721183aac2890d9a')">Ad 2</button>
 <button class="earn-btn" onclick="openAd('https://www.revenuecpmgate.com/r9fnmmre1?key=26bdfcbc52f583dbc0080aedcc0b6131')">Ad 3</button>
-</div>
 
 <!-- CAPTCHA Section -->
 <div class="captcha-container">
@@ -55,6 +54,7 @@ input,select{width:100%;padding:8px;margin:6px 0;border-radius:8px;border:none;f
 <div id="captchaCode" style="font-weight:bold;font-size:18px;letter-spacing:4px;"></div>
 <input type="text" id="captchaInput" class="captcha-input" placeholder="Enter code here">
 <button class="claim-btn" onclick="verifyCaptcha()">Submit CAPTCHA</button>
+</div>
 </div>
 
 <!-- Tasks Tab -->
@@ -88,7 +88,7 @@ input,select{width:100%;padding:8px;margin:6px 0;border-radius:8px;border:none;f
 <!-- Withdraw Tab -->
 <div id="withdraw" class="tab">
 <h2>Withdraw</h2>
-<input type="number" id="withdrawAmount" placeholder="Enter amount (Min $0.5)">
+<input type="number" id="withdrawAmount" placeholder="Enter amount (Min $0.03)">
 <select id="withdrawMethod">
 <option value="binance">Binance ID</option>
 <option value="pol">POL Coin Address</option>
@@ -180,7 +180,7 @@ function withdraw(){
 const amount=parseFloat(document.getElementById('withdrawAmount').value);
 const method=document.getElementById('withdrawMethod').value;
 const address=document.getElementById('walletAddress').value;
-if(amount<0.5||!address){alert('Min withdraw $0.5 and valid address required'); return;}
+if(amount<0.03||!address){alert('Min withdraw $0.03 and valid address required'); return;}
 withdrawHistory.push(`${amount}$ via ${method.toUpperCase()} - ${address}`);
 document.getElementById('history').innerHTML='<h3>Withdraw History:</h3>'+withdrawHistory.map(x=>'<p>'+x+'</p>').join('');
 
