@@ -1,303 +1,532 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Ads Click Pay</title>
-  <style>
-    body {
-      font-family: "Poppins", sans-serif;
-      margin: 0;
-      padding: 0;
-      background: url('https://images.unsplash.com/photo-1641931213518-4a43259c59e5') no-repeat center center fixed;
-      background-size: cover;
-      color: #fff;
-    }
-    .overlay {
-      background: rgba(0,0,0,0.65);
-      min-height: 100vh;
-      padding-bottom: 80px;
-    }
-    h1 {
-      text-align: center;
-      padding: 20px 0;
-      font-size: 2rem;
-      color: #ffcc00;
-      text-shadow: 0px 0px 8px #000;
-    }
-    .balance-card {
-      max-width: 400px;
-      margin: 0 auto 20px;
-      padding: 20px;
-      border-radius: 15px;
-      background: rgba(255, 255, 255, 0.15);
-      backdrop-filter: blur(10px);
-      text-align: center;
-      box-shadow: 0px 4px 12px rgba(0,0,0,0.4);
-    }
-    .balance-card span {
-      font-size: 1.6rem;
-      font-weight: bold;
-      color: #00ffcc;
-    }
-    .tab {
-      display: none;
-    }
-    .tab.active {
-      display: block;
-    }
-    .card {
-      background: rgba(255,255,255,0.12);
-      margin: 15px auto;
-      padding: 20px;
-      border-radius: 12px;
-      max-width: 450px;
-      box-shadow: 0px 4px 10px rgba(0,0,0,0.4);
-      backdrop-filter: blur(8px);
-    }
-    input, select {
-      padding: 10px;
-      margin: 8px 0;
-      width: 95%;
-      border-radius: 8px;
-      border: none;
-      outline: none;
-      font-size: 1rem;
-    }
-    .btn {
-      background: linear-gradient(45deg, #ffcc00, #ff8800);
-      color: #000;
-      padding: 12px 20px;
-      border: none;
-      border-radius: 10px;
-      cursor: pointer;
-      margin-top: 10px;
-      font-weight: bold;
-      transition: all 0.3s ease;
-    }
-    .btn:hover {
-      transform: scale(1.05);
-      box-shadow: 0px 4px 15px rgba(255,200,0,0.6);
-    }
-    nav {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      width: 100%;
-      background: rgba(0,0,0,0.85);
-      display: flex;
-      justify-content: space-around;
-      padding: 12px 0;
-      backdrop-filter: blur(8px);
-    }
-    nav button {
-      background: none;
-      border: none;
-      color: #ffcc00;
-      font-size: 1rem;
-      font-weight: bold;
-      cursor: pointer;
-      transition: 0.3s;
-    }
-    nav button:hover {
-      color: #fff;
-      transform: scale(1.1);
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 10px;
-      font-size: 0.9rem;
-    }
-    table, th, td {
-      border: 1px solid rgba(255,255,255,0.3);
-      padding: 8px;
-    }
-    th {
-      background: rgba(0,0,0,0.6);
-      color: #ffcc00;
-    }
-    td {
-      background: rgba(255,255,255,0.1);
-    }
-  </style>
-</head>
-<body>
-  <div class="overlay">
-    <h1>🚀 Ads Click Pay</h1>
-    <div class="balance-card">
-      Balance: $<span id="balance">0.00</span>
-    </div>
+<!DOCTYPE html>  <html lang="si">  
+<head>  
+<meta charset="utf-8" />  
+<meta name="viewport" content="width=device-width,initial-scale=1" />  
+<title>Ads Click Pay — Panda Technic (Fixed)</title>  
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">  
+<style>  
+  :root{  
+    --muted:#9fb3c8;  
+    --accent:#06b6d4;  
+    --accent-2:#ffb547;  
+    --card-bg: rgba(255,255,255,0.04);  
+    --glass: rgba(255,255,255,0.03);  
+  }  
+  *{box-sizing:border-box}  
+  html,body{height:100%;margin:0;font-family:Inter,system-ui,Segoe UI,Roboto,Arial; background:#031021;}  
+  body{  
+    background-image:url('https://images.unsplash.com/photo-1504711434969-e33886168f5c?auto=format&fit=crop&w=1600&q=80');  
+    background-size:cover;background-position:center;  
+    color:#e6eef6;  
+    -webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;  
+  }  
+  /* dark overlay to improve contrast */  
+  body::before{  
+    content:"";position:fixed;inset:0;background:linear-gradient(rgba(2,6,12,0.7), rgba(3,10,20,0.7));z-index:0;  
+  }  .app{ position:relative; z-index:1; max-width:520px;margin:24px auto;height:94vh;border-radius:14px; overflow:hidden;
+display:flex; flex-direction:column; border:1px solid rgba(255,255,255,0.03); box-shadow:0 12px 40px rgba(0,0,0,0.6); background:linear-gradient(180deg, rgba(2,6,12,0.3), rgba(2,6,12,0.2)); }
+header{display:flex;gap:12px;align-items:center;padding:18px 18px;border-bottom:1px solid rgba(255,255,255,0.02);}
+.logo{width:56px;height:56px;border-radius:10px;background:linear-gradient(135deg,#06b6d4,#0ea5a3);display:flex;align-items:center;justify-content:center;font-weight:800;color:#012; font-size:20px}
+header h1{margin:0;font-size:18px}
+header .sub{color:var(--muted);font-size:13px}
 
-    <!-- Register Form -->
-    <div id="registerForm" class="card">
-      <h2>📝 Register</h2>
-      <input type="text" id="username" placeholder="Enter your name">
-      <input type="text" id="binanceId" placeholder="Enter Binance ID">
-      <button class="btn" onclick="register()">Register</button>
-    </div>
+main{padding:14px;flex:1;overflow:auto}
+nav.tabs{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap}
+.tabBtn{flex:1;padding:10px;border-radius:10px;background:var(--glass);border:none;color:var(--muted);cursor:pointer;font-weight:700}
+.tabBtn.active{background:linear-gradient(90deg,#042b3a,#052d36);color:#e6eef6}
 
-    <!-- Earn Tab -->
-    <div id="earn" class="tab active">
-      <div class="card">
-        <h3>Telegram Tasks</h3>
-        <button class="btn" onclick="joinChannel()">Join Channel</button>
-      </div>
-      <div class="card">
-        <h3>Watch Ads</h3>
-        <button class="btn" onclick="watchAd()">Watch Ad</button>
-      </div>
-      <div class="card">
-        <h3>Captcha</h3>
-        <input type="text" id="captcha" placeholder="Type '1234'">
-        <button class="btn" onclick="submitCaptcha()">Submit</button>
-      </div>
-    </div>
+.panel{display:none}
+.panel.active{display:block}
+.card{background:var(--card-bg);padding:14px;border-radius:12px;margin-bottom:12px;border:1px solid rgba(255,255,255,0.02)}
+.small{color:var(--muted);font-size:13px}
+.balance{display:flex;justify-content:space-between;align-items:center}
+.bal-amt{font-size:20px;font-weight:700}
+.invite{font-size:13px;color:var(--muted)}
 
-    <!-- Profile Tab -->
-    <div id="profile" class="tab">
-      <div class="card">
-        <h2>👤 Profile</h2>
-        <p>Name: <span id="pName"></span></p>
-        <p>Binance ID: <span id="pBinance"></span></p>
-        <p>Your Referral Link:</p>
-        <input type="text" id="refLink" readonly>
-      </div>
-    </div>
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.btn{padding:10px 12px;border-radius:9px;border:none;cursor:pointer;font-weight:700;color:#042026;background:linear-gradient(90deg,#06b6d4,#0ea5a3)}
+.btn.ghost{background:transparent;color:var(--muted);border:1px solid rgba(255,255,255,0.04)}
+.btn.warn{background:linear-gradient(90deg,#ffb547,#ff8a00);color:#2b1600}
+.btn.small{padding:8px 10px;font-size:14px}
+input[type="text"], input[type="number"]{width:100%;padding:10px;border-radius:8px;border:none;margin-top:8px;background:rgba(255,255,255,0.02);color:#e6eef6}
+select{width:100%;padding:10px;border-radius:8px;border:none;margin-top:8px;background:rgba(255,255,255,0.02);color:#e6eef6}
 
-    <!-- Withdraw Tab -->
-    <div id="withdraw" class="tab">
-      <div class="card">
-        <h2>💸 Withdraw</h2>
-        <p>Minimum Withdraw: $0.20</p>
-        <select id="withdrawBinance"></select>
-        <button class="btn" onclick="withdraw()">Withdraw</button>
-        <div>
-          <h3>📜 History</h3>
-          <table>
-            <thead>
-              <tr>
-                <th>Amount</th>
-                <th>Binance ID</th>
-              </tr>
-            </thead>
-            <tbody id="history"></tbody>
-          </table>
-        </div>
-      </div>
-    </div>
+.taskRow{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:8px;border-radius:8px;background:rgba(255,255,255,0.02)}
+.taskRow .meta{flex:1;text-align:left}
+.history-list{max-height:220px;overflow:auto;padding:6px}
 
-    <nav>
-      <button onclick="showTab('earn')">Earn</button>
-      <button onclick="showTab('profile')">Profile</button>
-      <button onclick="showTab('withdraw')">Withdraw</button>
-    </nav>
-  </div>
+.modal-back{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.6);z-index:60}
+.modal{width:92%;max-width:420px;background:linear-gradient(180deg,#021428,#03202a);padding:18px;border-radius:12px;border:1px solid rgba(255,255,255,0.03);box-shadow:0 10px 40px rgba(0,0,0,0.6)}
+.muted{color:var(--muted);font-size:13px}
+footer{padding:10px;text-align:center;color:var(--muted);font-size:12px;border-top:1px solid rgba(255,255,255,0.02)}
+@media (max-width:520px){ .app{margin:10px 10px;height:98vh} header{padding:14px} .logo{width:48px;height:48px} }
+</style>
 
-  <script>
-    let balance = parseFloat(localStorage.getItem("balance")) || 0;
-    let user = JSON.parse(localStorage.getItem("user")) || null;
-    let history = JSON.parse(localStorage.getItem("history")) || [];
+</head>  
+<body>  
+  <div class="app" id="app">  
+    <header>  
+      <div class="logo">ACP</div>  
+      <div>  
+        <h1>Ads Click Pay</h1>  
+        <div class="sub">Panda Technic — Earn by watching ads & joining channels</div>  
+      </div>  
+    </header>  <main>  
+  <nav class="tabs" id="nav">  
+    <button class="tabBtn active" data-tab="earn">Earn</button>  
+    <button class="tabBtn" data-tab="tasks">Tasks</button>  
+    <button class="tabBtn" data-tab="ref">Referral</button>  
+    <button class="tabBtn" data-tab="withdraw">Withdraw</button>  
+    <button class="tabBtn" data-tab="profile">Profile</button>  
+  </nav>  
 
-    document.getElementById("balance").innerText = balance.toFixed(2);
+  <!-- EARN -->  
+  <section id="earn" class="panel active">  
+    <div class="card balance">  
+      <div>  
+        <div class="small">Your balance</div>  
+        <div class="bal-amt" id="balanceDisplay">$0.00000</div>  
+        <div class="small">Clicks & Captchas update instantly</div>  
+      </div>  
+      <div style="text-align:right">  
+        <div class="small">Invite code</div>  
+        <div class="invite" id="inviteCode">—</div>  
+      </div>  
+    </div>  
 
-    function save() {
-      localStorage.setItem("balance", balance);
-      localStorage.setItem("user", JSON.stringify(user));
-      localStorage.setItem("history", JSON.stringify(history));
-    }
+    <div class="card">  
+      <strong>Click Ads — $0.0001 each</strong>  
+      <div class="small">Click any ad to open (Adsterra). When you return, balance credited immediately.</div>  
+      <div class="actions">  
+        <button class="btn" onclick="openAd('https://www.revenuecpmgate.com/yc4zy360?key=668ce693eb60fa7cc11dd002b6a3adab')">Open Ad 1</button>  
+        <button class="btn" onclick="openAd('https://www.revenuecpmgate.com/ds7h6p686?key=1f2f476c9ca95b3a721183aac2890d9a')">Open Ad 2</button>  
+        <button class="btn" onclick="openAd('https://www.revenuecpmgate.com/r9fnmmre1?key=26bdfcbc52f583dbc0080aedcc0b6131')">Open Ad 3</button>  
+        <button class="btn ghost" onclick="focusCaptcha()">Go to CAPTCHA</button>  
+      </div>  
+    </div>  
 
-    function register() {
-      let name = document.getElementById("username").value;
-      let binance = document.getElementById("binanceId").value;
-      if (!name || !binance) {
-        alert("⚠️ Fill all fields!");
-        return;
-      }
-      user = { name, binance, ref: "https://myapp.com/?ref=" + name };
-      document.getElementById("pName").innerText = user.name;
-      document.getElementById("pBinance").innerText = user.binance;
-      document.getElementById("refLink").value = user.ref;
-      document.getElementById("withdrawBinance").innerHTML = `<option>${user.binance}</option>`;
-      document.getElementById("registerForm").style.display = "none";
-      save();
-    }
+    <div class="card" id="captchaCard">  
+      <strong>CAPTCHA — $0.00015</strong>  
+      <div class="small">Solve the CAPTCHA to claim. Submission opens an ad link.</div>  
+      <div id="captchaCode" style="margin-top:10px;font-weight:800;font-size:20px;letter-spacing:3px"></div>  
+      <input id="captchaInput" type="text" placeholder="Type the code here" />  
+      <div class="actions" style="margin-top:8px">  
+        <button class="btn" onclick="submitCaptcha()">Submit CAPTCHA</button>  
+        <button class="btn ghost" onclick="regenCaptcha()">Regenerate</button>  
+      </div>  
+      <div id="captchaMsg" class="muted" style="margin-top:8px"></div>  
+    </div>  
+  </section>  
 
-    function showTab(tab) {
-      document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
-      document.getElementById(tab).classList.add("active");
-    }
+  <!-- TASKS -->  
+  <section id="tasks" class="panel">  
+    <div class="card">  
+      <strong>Telegram Tasks — $0.01 each</strong>  
+      <div class="small">Tap Join → join the channel → then press Claim. One-time per user.</div>  
 
-    function joinChannel() {
-      balance += 0.001;
-      document.getElementById("balance").innerText = balance.toFixed(2);
-      save();
-      alert("✅ Channel joined! +$0.001");
-    }
+      <div style="margin-top:12px;display:flex;flex-direction:column;gap:10px">  
+        <div id="task_binanance" class="taskRow">  
+          <div class="meta">  
+            <div style="font-weight:700">Binanance Earn</div>  
+            <div class="small">https://t.me/binananceearn1</div>  
+          </div>  
+          <div style="display:flex;flex-direction:column;gap:6px">  
+            <button class="btn ghost small" onclick="joinChannel('task_binanance','https://t.me/binananceearn1')">Join</button>  
+            <button class="btn small" id="claim_task_binanance" style="display:none" onclick="claimTask('task_binanance')">Claim</button>  
+          </div>  
+        </div>  
 
-    function watchAd() {
-      let adWin = window.open("https://example.com/ad", "_blank");
-      let check = setInterval(() => {
-        if (adWin.closed) {
-          clearInterval(check);
-          try {
-            if (adWin.location && adWin.location.hostname === "www.google.com") {
-              alert("⚠️ Invalid Ad. No reward added.");
-            } else {
-              balance += 0.0001;
-              document.getElementById("balance").innerText = balance.toFixed(2);
-              save();
-              alert("🎉 Ad watched! +$0.0001");
-            }
-          } catch (e) {
-            balance += 0.0001;
-            document.getElementById("balance").innerText = balance.toFixed(2);
-            save();
-            alert("🎉 Ad watched! +$0.0001");
-          }
-        }
-      }, 1000);
-    }
+        <div id="task_emoney" class="taskRow">  
+          <div class="meta">  
+            <div style="font-weight:700">E-Money Web</div>  
+            <div class="small">https://t.me/emoneyweb</div>  
+          </div>  
+          <div style="display:flex;flex-direction:column;gap:6px">  
+            <button class="btn ghost small" onclick="joinChannel('task_emoney','https://t.me/emoneyweb')">Join</button>  
+            <button class="btn small" id="claim_task_emoney" style="display:none" onclick="claimTask('task_emoney')">Claim</button>  
+          </div>  
+        </div>  
 
-    function submitCaptcha() {
-      let val = document.getElementById("captcha").value;
-      if (val === "1234") {
-        balance += 0.00015;
-        document.getElementById("balance").innerText = balance.toFixed(2);
-        save();
-        alert("✅ Captcha correct! +$0.00015");
-      } else {
-        alert("❌ Wrong captcha");
-      }
-    }
+        <div id="task_panda" class="taskRow">  
+          <div class="meta">  
+            <div style="font-weight:700">Panda Technic</div>  
+            <div class="small">https://t.me/panda_technic</div>  
+          </div>  
+          <div style="display:flex;flex-direction:column;gap:6px">  
+            <button class="btn ghost small" onclick="joinChannel('task_panda','https://t.me/panda_technic')">Join</button>  
+            <button class="btn small" id="claim_task_panda" style="display:none" onclick="claimTask('task_panda')">Claim</button>  
+          </div>  
+        </div>  
+      </div>  
+    </div>  
+  </section>  
 
-    function withdraw() {
-      if (balance < 0.20) {
-        alert("⚠️ Minimum withdraw is $0.20");
-        return;
-      }
-      let binance = document.getElementById("withdrawBinance").value;
-      history.push({ amount: balance.toFixed(2), binance });
-      let tableRows = history.map(h => `<tr><td>$${h.amount}</td><td>${h.binance}</td></tr>`).join("");
-      document.getElementById("history").innerHTML = tableRows;
-      balance = 0;
-      document.getElementById("balance").innerText = balance.toFixed(2);
-      save();
-      alert("✅ Withdraw request submitted!");
-    }
+  <!-- REFERRAL -->  
+  <section id="ref" class="panel">  
+    <div class="card">  
+      <strong>Referral</strong>  
+      <div class="small">Share your referral link — inviter gets $0.01 when a new user registers using it.</div>  
+      <div style="display:flex;gap:8px;margin-top:10px">  
+        <input id="refLink" type="text" readonly style="flex:1" />  
+        <button class="btn ghost" onclick="copyRef()">Copy</button>  
+      </div>  
+    </div>  
+  </section>  
 
-    // Load on start
-    window.onload = () => {
-      if (user) {
-        document.getElementById("registerForm").style.display = "none";
-        document.getElementById("pName").innerText = user.name;
-        document.getElementById("pBinance").innerText = user.binance;
-        document.getElementById("refLink").value = user.ref;
-        document.getElementById("withdrawBinance").innerHTML = `<option>${user.binance}</option>`;
-      }
-      let tableRows = history.map(h => `<tr><td>$${h.amount}</td><td>${h.binance}</td></tr>`).join("");
-      document.getElementById("history").innerHTML = tableRows;
-    }
-  </script>
-</body>
-</html>
+  <!-- WITHDRAW -->  
+  <section id="withdraw" class="panel">  
+    <div class="card">  
+      <strong>Withdraw</strong>  
+      <div class="small">Minimum withdraw: $0.03</div>  
+      <input id="withdrawAmount" type="number" placeholder="Amount (USDT)"/>  
+      <select id="withdrawMethod">  
+        <option value="binance">Binance ID</option>  
+        <option value="pol">POL Coin Address</option>  
+      </select>  
+      <input id="withdrawWallet" type="text" placeholder="Enter Binance ID or POL Address"/>  
+      <div style="display:flex;gap:8px;margin-top:10px">  
+        <button class="btn warn" onclick="requestWithdraw()">Request Withdraw</button>  
+        <button class="btn ghost" onclick="clearWithdrawHistory()">Clear History</button>  
+      </div>  
+
+      <div style="margin-top:12px">  
+        <div style="font-weight:700">Withdraw History</div>  
+        <div id="withdrawHistory" class="history-list small" style="margin-top:8px"></div>  
+      </div>  
+    </div>  
+  </section>  
+
+  <!-- PROFILE -->  
+  <section id="profile" class="panel">  
+    <div class="card">  
+      <strong>Profile</strong>  
+      <div class="small" style="margin-top:8px">Name: <span id="profileName">—</span></div>  
+      <div class="small">Wallet: <span id="profileWallet">—</span></div>  
+      <div class="small">User ID: <span id="profileId">—</span></div>  
+      <div style="margin-top:10px;display:flex;gap:8px">  
+        <button class="btn ghost" onclick="openRegister(true)">Edit Profile</button>  
+        <button class="btn ghost" onclick="logout()">Logout</button>  
+      </div>  
+    </div>  
+  </section>  
+
+</main>  
+
+<footer>Ads Click Pay — Panda Technic · Demo (localStorage)</footer>
+
+  </div>    <!-- Register modal -->    <div id="modal" class="modal-back" style="display:none">  
+    <div class="modal">  
+      <h3>Create your account</h3>  
+      <div class="muted">Register to save balance, tasks & withdraws on this device. If you opened with a referral link, the inviter will be credited after you register.</div>  
+      <input id="regName" type="text" placeholder="Display name (required)"/>  
+      <input id="regWallet" type="text" placeholder="Binance ID or POL address (optional)"/>  
+      <div style="display:flex;gap:8px;margin-top:12px">  
+        <button class="btn" onclick="doRegister()">Register</button>  
+        <button class="btn ghost" onclick="skipRegister()">Skip (guest)</button>  
+      </div>  
+    </div>  
+  </div>  <script>  
+/* ------------------------  
+  App logic (fixed & robust)  
+  - Removed duplicate doRegister stub  
+  - Single regenCaptcha()  
+  - pendingRef stored when ref param exists  
+  - doRegister credits pendingRef (if inviter exists in localStorage users)  
+-------------------------*/  
+  
+const BOT_TOKEN = '7437326664:AAGpM5JQ6gHgJ0dpyhQHD-2-XoRE9dcsfaI'; // your bot token (frontend demo only)  
+const CHAT_ID = '@payment1267';  
+  
+function uid(n=8){ return Math.random().toString(36).substring(2,2+n) }  
+function saveUsers(){ localStorage.setItem('users', JSON.stringify(users)); }  
+function loadUsers(){ users = JSON.parse(localStorage.getItem('users')||'{}'); }  
+  
+let users = {};  
+let currentUserId = localStorage.getItem('currentUserId') || null;  
+  
+/* ----- Register modal controls ----- */  
+function openRegister(edit=false){  
+  loadUsers(); // ensure users loaded before reading currentUserId  
+  document.getElementById('modal').style.display = 'flex';  
+  if(edit && currentUserId && users[currentUserId]){  
+    document.getElementById('regName').value = users[currentUserId].name || '';  
+    document.getElementById('regWallet').value = users[currentUserId].wallet || '';  
+  } else {  
+    document.getElementById('regName').value = '';  
+    document.getElementById('regWallet').value = '';  
+  }  
+}  
+  
+function skipRegister(){  
+  loadUsers();  
+  const id = 'guest_'+uid(6);  
+  users[id] = { id, name:'Guest', wallet:'', balance:0, tasks:{}, withdraws:[], inviteCode: 'PT-'+Math.floor(1000+Math.random()*9000) };  
+  currentUserId = id;  
+  saveUsers();  
+  localStorage.setItem('currentUserId', currentUserId);  
+  document.getElementById('modal').style.display='none';  
+  refreshUI();  
+}  
+  
+/* ----- doRegister (single definition, fixed) ----- */  
+function doRegister(){  
+  loadUsers();  
+  const name = (document.getElementById('regName').value||'').trim();  
+  const wallet = (document.getElementById('regWallet').value||'').trim();  
+  if(!name){ alert('Please enter display name'); return; }  
+  const id = 'u_'+uid(8);  
+  const invite = 'PT-'+Math.floor(1000+Math.random()*9000);  
+  users[id] = { id, name, wallet, balance:0, tasks:{}, withdraws:[], inviteCode:invite };  
+  
+  // referral credit logic: accept either URL param or pendingRef stored earlier  
+  const params = new URLSearchParams(location.search);  
+  const paramRef = params.get('ref');  
+  const pendingRef = localStorage.getItem('pendingRef');  
+  const ref = paramRef || pendingRef;  
+  if(ref && users[ref]){  
+    users[ref].balance = (users[ref].balance || 0) + 0.01;  
+    users[ref].withdraws = users[ref].withdraws || [];  
+    users[ref].withdraws.unshift(`Referral bonus from ${name} (+$0.01) — ${new Date().toLocaleString()}`);  
+    // clear pendingRef after credit  
+    localStorage.removeItem('pendingRef');  
+    alert('Referrer credited $0.01');  
+  }  
+  
+  currentUserId = id;  
+  saveUsers();  
+  localStorage.setItem('currentUserId', currentUserId);  
+  document.getElementById('modal').style.display='none';  
+  refreshUI();  
+}  
+  
+/* ----- logout ----- */  
+function logout(){  
+  localStorage.removeItem('currentUserId');  
+  currentUserId = null;  
+  alert('Logged out. You will be asked to register.');  
+  openRegister();  
+}  
+  
+/* ----- ensure user present on load ----- */  
+function ensureUser(){  
+  loadUsers();  
+  currentUserId = localStorage.getItem('currentUserId') || null;  
+  if(currentUserId && !users[currentUserId]){ currentUserId = null; localStorage.removeItem('currentUserId'); }  
+  if(!currentUserId){  
+    document.getElementById('modal').style.display='flex';  
+  } else {  
+    document.getElementById('modal').style.display='none';  
+    refreshUI();  
+  }  
+}  
+  
+/* ----- refresh UI ----- */  
+function refreshUI(){  
+  loadUsers();  
+  if(!currentUserId || !users[currentUserId]) return;  
+  const u = users[currentUserId];  
+  document.getElementById('balanceDisplay').innerText = '$' + ((u.balance||0).toFixed(5));  
+  document.getElementById('inviteCode').innerText = u.inviteCode || '—';  
+  document.getElementById('profileName').innerText = u.name || '—';  
+  document.getElementById('profileWallet').innerText = u.wallet || '—';  
+  document.getElementById('profileId').innerText = currentUserId;  
+  document.getElementById('refLink').value = location.origin + location.pathname + '?ref=' + currentUserId;  
+  // tasks UI reflect  
+  ['task_binanance','task_emoney','task_panda'].forEach(k=>{  
+    const el = document.getElementById(k);  
+    if(el){  
+      if(u.tasks && u.tasks[k]){  
+        el.innerHTML = '<div style="color:#88ff88;font-weight:700">✅ Completed</div>';  
+      } else {  
+        // restore default inner markup if was replaced earlier (keep simple)  
+        // do nothing so original markup remains if not claimed  
+      }  
+    }  
+  });  
+  loadWithdrawHistoryUI();  
+}  
+  
+/* ----- credit user ----- */  
+function creditUser(amount, note){  
+  loadUsers();  
+  if(!currentUserId || !users[currentUserId]){ alert('No active user — please register'); openRegister(); return; }  
+  const u = users[currentUserId];  
+  u.balance = (u.balance || 0) + amount;  
+  u.withdraws = u.withdraws || [];  
+  u.withdraws.unshift(`${note} (+$${amount.toFixed(5)}) — ${new Date().toLocaleString()}`);  
+  users[currentUserId] = u;  
+  saveUsers();  
+  refreshUI();  
+}  
+  
+/* ------------- Ads & Captcha ------------- */  
+  
+// open ad and credit immediately  
+function openAd(url){  
+  window.open(url,'_blank');  
+  creditUser(0.0001, 'Ad click');  
+}  
+  
+// captcha (single regenCaptcha function)  
+let currentCaptcha = '';  
+function regenCaptcha(){  
+  const chars='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';  
+  let s=''; for(let i=0;i<6;i++) s+=chars.charAt(Math.floor(Math.random()*chars.length));  
+  currentCaptcha = s;  
+  const el = document.getElementById('captchaCode'); if(el) el.innerText = currentCaptcha;  
+  const msg = document.getElementById('captchaMsg'); if(msg) msg.innerText = '';  
+}  
+regenCaptcha();  
+  
+function focusCaptcha(){ document.querySelector('[data-tab="earn"]').click(); window.scrollTo({top:0, behavior:'smooth'}); const el=document.getElementById('captchaInput'); if(el) el.focus(); }  
+  
+function submitCaptcha(){  
+  const v = (document.getElementById('captchaInput').value||'').trim().toUpperCase();  
+  if(!v){ alert('Enter CAPTCHA'); return; }  
+  if(v === currentCaptcha){  
+    creditUser(0.00015, 'CAPTCHA');  
+    // open adsterra link  
+    window.open('https://www.revenuecpmgate.com/yc4zy360?key=668ce693eb60fa7cc11dd002b6a3adab','_blank');  
+    document.getElementById('captchaMsg').innerText = 'CAPTCHA correct — credited!';  
+    document.getElementById('captchaInput').value = '';  
+    regenCaptcha();  
+  } else {  
+    document.getElementById('captchaMsg').innerText = 'Incorrect CAPTCHA — try again';  
+  }  
+}  
+  
+/* ------------- Tasks ------------- */  
+  
+function joinChannel(taskId, url){  
+  window.open(url,'_blank');  
+  // show claim button  
+  const claimBtn = document.getElementById('claim_'+taskId);  
+  if(claimBtn) claimBtn.style.display = 'inline-block';  
+}  
+  
+function claimTask(taskId){  
+  loadUsers();  
+  if(!currentUserId || !users[currentUserId]){ openRegister(); return; }  
+  const u = users[currentUserId];  
+  u.tasks = u.tasks || {};  
+  if(u.tasks[taskId]){ alert('Already claimed'); return; }  
+  u.tasks[taskId] = true;  
+  users[currentUserId] = u;  
+  saveUsers();  
+  creditUser(0.01, 'Task claim');  
+  // replace UI  
+  const el = document.getElementById(taskId);  
+  if(el) el.innerHTML = '<div style="color:#88ff88;font-weight:700">✅ Completed</div>';  
+}  
+  
+/* ------------- Withdraw ------------- */  
+  
+function requestWithdraw(){  
+  loadUsers();  
+  if(!currentUserId || !users[currentUserId]){ openRegister(); return; }  
+  const amt = parseFloat(document.getElementById('withdrawAmount').value || '0');  
+  const wallet = (document.getElementById('withdrawWallet').value||'').trim();  
+  const method = document.getElementById('withdrawMethod').value;  
+  if(isNaN(amt) || amt < 0.03){ alert('Minimum withdraw is $0.03'); return; }  
+  const u = users[currentUserId];  
+  if((u.balance||0) < amt){ alert('Insufficient balance'); return; }  
+  u.balance = (u.balance||0) - amt;  
+  u.withdraws = u.withdraws || [];  
+  const rec = `Withdraw $${amt.toFixed(2)} via ${method} — ${wallet} (${new Date().toLocaleString()})`;  
+  u.withdraws.unshift(rec);  
+  users[currentUserId] = u;  
+  saveUsers();  
+  // send Telegram notification (best-effort)  
+  fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {  
+    method:'POST',  
+    headers:{'Content-Type':'application/json'},  
+    body: JSON.stringify({ chat_id: CHAT_ID, text: `📤 Withdraw Request\nUser: ${u.name}\nAmount: $${amt}\nMethod: ${method}\nWallet: ${wallet}` })  
+  }).catch(()=>{ /* ignore network errors */ });  
+  alert('Withdraw requested — notification sent.');  
+  refreshUI();  
+  // clear inputs  
+  document.getElementById('withdrawAmount').value=''; document.getElementById('withdrawWallet').value='';  
+}  
+  
+function loadWithdrawHistoryUI(){  
+  loadUsers();  
+  if(!currentUserId || !users[currentUserId]) return;  
+  const u = users[currentUserId];  
+  const container = document.getElementById('withdrawHistory');  
+  container.innerHTML = '';  
+  if(u.withdraws && u.withdraws.length){  
+    u.withdraws.forEach(r=>{  
+      const d = document.createElement('div'); d.className='small'; d.style.marginBottom='8px'; d.innerText = r;  
+      container.appendChild(d);  
+    });  
+  } else {  
+    container.innerHTML = '<div class="small">No withdraw history</div>';  
+  }  
+}  
+  
+function clearWithdrawHistory(){  
+  if(!currentUserId || !users[currentUserId]) return;  
+  if(!confirm('Clear withdraw history for this account?')) return;  
+  users[currentUserId].withdraws = [];  
+  saveUsers();  
+  loadWithdrawHistoryUI();  
+}  
+  
+/* ------------- Referral copy ------------- */  
+function copyRef(){  
+  const v = document.getElementById('refLink').value;  
+  navigator.clipboard.writeText(v).then(()=>alert('Referral link copied'));  
+}  
+  
+/* ------------- Tabs & Init ------------- */  
+  
+document.querySelectorAll('.tabBtn').forEach(btn=>{  
+  btn.addEventListener('click', (e)=>{  
+    document.querySelectorAll('.tabBtn').forEach(b=>b.classList.remove('active'));  
+    btn.classList.add('active');  
+    const tab = btn.dataset.tab;  
+    document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));  
+    document.getElementById(tab).classList.add('active');  
+    if(tab === 'withdraw') loadWithdrawHistoryUI();  
+  });  
+});  
+  
+// on page load  
+(function init(){  
+  loadUsers();  
+  currentUserId = localStorage.getItem('currentUserId') || null;  
+  if(currentUserId && !users[currentUserId]){ currentUserId = null; localStorage.removeItem('currentUserId'); }  
+  // check referral param: if present store pendingRef (we will credit on registration if inviter exists in local users)  
+  const params = new URLSearchParams(window.location.search);  
+  const ref = params.get('ref');  
+  if(ref) {  
+    localStorage.setItem('pendingRef', ref);  
+  }  
+  if(!currentUserId){  
+    // show modal  
+    document.getElementById('modal').style.display='flex';  
+  } else {  
+    document.getElementById('modal').style.display='none';  
+    refreshUI();  
+  }  
+  // setup initial captcha  
+  regenCaptcha();  
+  // wire regenCaptcha function for button  
+  window.regenCaptcha = regenCaptcha;  
+})();  
+  
+/* Provide aliases for global access */  
+window.openAd = openAd;  
+window.submitCaptcha = submitCaptcha;  
+window.regenCaptcha = regenCaptcha;  
+window.joinChannel = joinChannel;  
+window.claimTask = claimTask;  
+window.requestWithdraw = requestWithdraw;  
+window.copyRef = copyRef;  
+window.openRegister = openRegister;  
+window.skipRegister = skipRegister;  
+window.doRegister = doRegister;  
+window.logout = logout;  
+window.focusCaptcha = focusCaptcha;  
+</script>  </body>  
+</html> 
