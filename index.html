@@ -1,190 +1,229 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Ads Click Pay</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
-      background: url('https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=1470&q=80') no-repeat center center fixed;
-      background-size: cover;
       margin: 0;
-      padding: 0;
-      text-align: center;
+      font-family: Arial, sans-serif;
+      background: url('https://source.unsplash.com/1600x900/?technology,money') no-repeat center center/cover;
       color: white;
+      text-align: center;
     }
-    .container {
-      background: rgba(0,0,0,0.7);
-      margin: 20px;
-      border-radius: 15px;
-      padding: 20px;
-    }
-    nav {
+    .tabs {
       display: flex;
       justify-content: space-around;
-      background: rgba(0,0,0,0.8);
+      background: rgba(0, 0, 0, 0.7);
       padding: 10px;
       position: fixed;
       bottom: 0;
       width: 100%;
     }
-    nav button {
-      flex: 1;
-      padding: 10px;
+    .tab {
+      cursor: pointer;
+      font-weight: bold;
+    }
+    .tab-content {
+      display: none;
+      padding: 20px;
+      margin-top: 50px;
+    }
+    .active {
+      display: block;
+    }
+    button {
+      padding: 10px 20px;
       margin: 5px;
       border: none;
-      border-radius: 10px;
-      background: #00c853;
-      color: white;
-      font-size: 16px;
+      border-radius: 5px;
+      background: gold;
+      cursor: pointer;
+      font-weight: bold;
     }
-    .hidden { display: none; }
-    .task { margin: 10px 0; padding: 10px; background: #222; border-radius: 10px; }
-    .btn {
-      background: #ff9800;
-      color: white;
+    button:disabled {
+      background: gray;
+      cursor: not-allowed;
+    }
+    .card {
+      background: rgba(0,0,0,0.6);
+      padding: 15px;
+      border-radius: 10px;
+      margin: 10px auto;
+      max-width: 400px;
+      box-shadow: 0 0 10px black;
+    }
+    input {
+      padding: 10px;
+      margin: 5px;
+      border-radius: 5px;
       border: none;
-      padding: 8px 16px;
-      border-radius: 8px;
-      margin-top: 5px;
+      width: 80%;
     }
   </style>
 </head>
 <body>
+  <h1>💰 Ads Click Pay</h1>
+  <h2 id="balance">Balance: $0.00000</h2>
 
-  <div class="container">
-    <h1>Ads Click Pay</h1>
-    <p>Balance: <span id="balance">$0.00000</span></p>
+  <!-- Earn -->
+  <div id="earn" class="tab-content active">
+    <div class="card">
+      <h3>📺 Watch Ads ($0.0001 each)</h3>
+      <button onclick="watchAd('https://www.revenuecpmgate.com/yc4zy360?key=668ce693eb60fa7cc11dd002b6a3adab')">Ad 1</button>
+      <button onclick="watchAd('https://www.revenuecpmgate.com/ds7h6p686?key=1f2f476c9ca95b3a721183aac2890d9a')">Ad 2</button>
+      <button onclick="watchAd('https://www.revenuecpmgate.com/r9fnmmre1?key=26bdfcbc52f583dbc0080aedcc0b6131')">Ad 3</button>
+    </div>
+    <div class="card">
+      <h3>🔑 Captcha ($0.00015)</h3>
+      <p id="captcha"></p>
+      <input type="text" id="captchaInput" placeholder="Type captcha here" />
+      <button onclick="submitCaptcha()">Submit</button>
+    </div>
   </div>
 
-  <!-- Earn Tab -->
-  <div id="earn" class="container">
-    <h2>Earn Money</h2>
-
-    <h3>🔸 Watch Ads</h3>
-    <a href="https://www.revenuecpmgate.com/yc4zy360?key=668ce693eb60fa7cc11dd002b6a3adab" target="_blank">
-      <button class="btn" onclick="adClicked()">Ad 1</button>
-    </a>
-    <a href="https://www.revenuecpmgate.com/ds7h6p686?key=1f2f476c9ca95b3a721183aac2890d9a" target="_blank">
-      <button class="btn" onclick="adClicked()">Ad 2</button>
-    </a>
-    <a href="https://www.revenuecpmgate.com/r9fnmmre1?key=26bdfcbc52f583dbc0080aedcc0b6131" target="_blank">
-      <button class="btn" onclick="adClicked()">Ad 3</button>
-    </a>
-
-    <h3>🔸 Captcha</h3>
-    <p id="captchaQuestion"></p>
-    <input type="text" id="captchaInput" placeholder="Enter captcha">
-    <button class="btn" onclick="checkCaptcha()">Submit</button>
-    <p id="captchaMsg"></p>
+  <!-- Tasks -->
+  <div id="tasks" class="tab-content">
+    <div class="card">
+      <h3>✅ Join Telegram Channels ($0.01 each)</h3>
+      <div id="task1">
+        <a href="https://t.me/binananceearn1" target="_blank"><button>Join Channel 1</button></a>
+        <button onclick="claimTask('task1')">Claim</button>
+      </div>
+      <div id="task2">
+        <a href="https://t.me/emoneyweb" target="_blank"><button>Join Channel 2</button></a>
+        <button onclick="claimTask('task2')">Claim</button>
+      </div>
+      <div id="task3">
+        <a href="https://t.me/panda_technic" target="_blank"><button>Join Channel 3</button></a>
+        <button onclick="claimTask('task3')">Claim</button>
+      </div>
+    </div>
   </div>
 
-  <!-- Withdraw Tab -->
-  <div id="withdraw" class="container hidden">
-    <h2>Withdraw</h2>
-    <input type="number" id="withdrawAmount" placeholder="Enter amount">
-    <select id="withdrawMethod">
-      <option value="binance">Binance</option>
-      <option value="pol">POL</option>
-    </select>
-    <input type="text" id="wallet" placeholder="Enter Wallet ID/Address">
-    <button class="btn" onclick="withdraw()">Withdraw</button>
-    <h3>History</h3>
-    <ul id="history"></ul>
+  <!-- Referral -->
+  <div id="referral" class="tab-content">
+    <div class="card">
+      <h3>👥 Referral System</h3>
+      <p>Your referral link:</p>
+      <input type="text" id="refLink" readonly />
+      <button onclick="copyRef()">Copy</button>
+      <p>Each referral = $0.01</p>
+    </div>
   </div>
 
-  <nav>
-    <button onclick="showTab('earn')">Earn</button>
-    <button onclick="showTab('withdraw')">Withdraw</button>
-  </nav>
+  <!-- Withdraw -->
+  <div id="withdraw" class="tab-content">
+    <div class="card">
+      <h3>💵 Withdraw</h3>
+      <p>Minimum withdraw: $0.03</p>
+      <input type="number" id="amount" placeholder="Amount (USDT)" />
+      <input type="text" id="wallet" placeholder="Binance ID / POL Address" />
+      <select id="method">
+        <option value="binance">Binance</option>
+        <option value="pol">POL</option>
+      </select><br/>
+      <button onclick="withdraw()">Withdraw</button>
+      <div id="history"></div>
+    </div>
+  </div>
+
+  <!-- Tabs -->
+  <div class="tabs">
+    <div class="tab" onclick="openTab('earn')">Earn</div>
+    <div class="tab" onclick="openTab('tasks')">Tasks</div>
+    <div class="tab" onclick="openTab('referral')">Referral</div>
+    <div class="tab" onclick="openTab('withdraw')">Withdraw</div>
+  </div>
 
 <script>
-  // Load from localStorage
+  // LocalStorage
   let balance = parseFloat(localStorage.getItem("balance")) || 0;
-  let history = JSON.parse(localStorage.getItem("history")) || [];
+  document.getElementById("balance").innerText = "Balance: $" + balance.toFixed(5);
 
-  function updateBalance() {
-    document.getElementById("balance").innerText = "$" + balance.toFixed(5);
-    localStorage.setItem("balance", balance);
-  }
-
-  function showTab(tab) {
-    document.getElementById("earn").classList.add("hidden");
-    document.getElementById("withdraw").classList.add("hidden");
-    document.getElementById(tab).classList.remove("hidden");
-  }
-
-  // === Ads ===
-  function adClicked() {
-    // මූලින්ම link එක open වෙලා back උනොත් balance add වෙනවා
-    balance += 0.0001;
-    updateBalance();
-    alert("You earned $0.0001!");
-  }
-
-  // === Captcha ===
+  let captchaText = "";
   function generateCaptcha() {
-    let a = Math.floor(Math.random()*10);
-    let b = Math.floor(Math.random()*10);
-    document.getElementById("captchaQuestion").innerText = `What is ${a} + ${b}?`;
-    return a+b;
+    captchaText = Math.random().toString(36).substring(2, 7);
+    document.getElementById("captcha").innerText = captchaText;
   }
-  let captchaAnswer = generateCaptcha();
+  generateCaptcha();
 
-  function checkCaptcha() {
-    let input = document.getElementById("captchaInput").value;
-    if(parseInt(input) === captchaAnswer){
-      balance += 0.00015;
-      updateBalance();
-      document.getElementById("captchaMsg").innerText = "Correct! +$0.00015";
+  function updateBalance(amount) {
+    balance += amount;
+    localStorage.setItem("balance", balance);
+    document.getElementById("balance").innerText = "Balance: $" + balance.toFixed(5);
+  }
 
-      // Captcha submit → open ad link
+  function watchAd(url) {
+    window.open(url, "_blank");
+    updateBalance(0.0001);
+  }
+
+  function submitCaptcha() {
+    const input = document.getElementById("captchaInput").value;
+    if (input === captchaText) {
       window.open("https://www.revenuecpmgate.com/yc4zy360?key=668ce693eb60fa7cc11dd002b6a3adab", "_blank");
-
+      updateBalance(0.00015);
+      alert("Captcha correct! +$0.00015");
+      generateCaptcha();
+      document.getElementById("captchaInput").value = "";
     } else {
-      document.getElementById("captchaMsg").innerText = "Wrong!";
+      alert("Captcha incorrect!");
     }
-    captchaAnswer = generateCaptcha();
-    document.getElementById("captchaInput").value = "";
   }
 
-  // === Withdraw ===
-  function withdraw() {
-    let amount = parseFloat(document.getElementById("withdrawAmount").value);
-    let method = document.getElementById("withdrawMethod").value;
-    let wallet = document.getElementById("wallet").value;
+  function claimTask(id) {
+    if (!localStorage.getItem(id)) {
+      updateBalance(0.01);
+      localStorage.setItem(id, "done");
+      document.getElementById(id).innerHTML = "<p>✅ Completed</p>";
+    } else {
+      alert("Task already completed!");
+    }
+  }
 
-    if(amount < 0.03) {
+  function withdraw() {
+    const amount = parseFloat(document.getElementById("amount").value);
+    const wallet = document.getElementById("wallet").value;
+    const method = document.getElementById("method").value;
+    if (amount < 0.03) {
       alert("Minimum withdraw is $0.03");
       return;
     }
-    if(amount > balance) {
-      alert("Not enough balance!");
+    if (amount > balance) {
+      alert("Not enough balance");
       return;
     }
-
     balance -= amount;
-    updateBalance();
-
-    let record = `Withdraw $${amount.toFixed(2)} via ${method} → ${wallet}`;
-    history.push(record);
-    localStorage.setItem("history", JSON.stringify(history));
-
-    let li = document.createElement("li");
-    li.innerText = record;
-    document.getElementById("history").appendChild(li);
-
-    alert("Withdraw success!");
+    localStorage.setItem("balance", balance);
+    document.getElementById("balance").innerText = "Balance: $" + balance.toFixed(5);
+    let history = localStorage.getItem("history") || "";
+    const record = `Withdraw $${amount.toFixed(2)} via ${method} → ${wallet}<br>`;
+    history += record;
+    localStorage.setItem("history", history);
+    document.getElementById("history").innerHTML = history;
+    alert("Withdraw request sent!");
+    // Telegram bot notification
+    fetch(`https://api.telegram.org/bot7437326664:AAGpM5JQ6gHgJ0dpyhQHD-2-XoRE9dcsfaI/sendMessage?chat_id=@payment1267&text=New Withdraw: $${amount} via ${method} Wallet: ${wallet}`);
   }
 
-  window.onload = function() {
-    updateBalance();
-    history.forEach(rec => {
-      let li = document.createElement("li");
-      li.innerText = rec;
-      document.getElementById("history").appendChild(li);
-    });
+  function loadHistory() {
+    const history = localStorage.getItem("history") || "";
+    document.getElementById("history").innerHTML = history;
+  }
+  loadHistory();
+
+  function openTab(tab) {
+    document.querySelectorAll(".tab-content").forEach(el => el.classList.remove("active"));
+    document.getElementById(tab).classList.add("active");
+  }
+
+  function copyRef() {
+    const link = window.location.href + "?ref=USER123";
+    document.getElementById("refLink").value = link;
+    navigator.clipboard.writeText(link);
+    alert("Referral link copied!");
   }
 </script>
 </body>
