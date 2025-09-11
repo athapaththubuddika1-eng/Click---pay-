@@ -236,9 +236,13 @@
 <script>
 /* ------------------------
   App logic (fixed & robust)
+  - Removed duplicate doRegister stub
+  - Single regenCaptcha()
+  - pendingRef stored when ref param exists
+  - doRegister credits pendingRef (if inviter exists in localStorage users)
 -------------------------*/
 
-const BOT_TOKEN = '7437326664:AAGpM5JQ6gHgJ0dpyhQHD-2-XoRE9dcsfaI'; // your bot token
+const BOT_TOKEN = '7437326664:AAGpM5JQ6gHgJ0dpyhQHD-2-XoRE9dcsfaI'; // your bot token (frontend demo only)
 const CHAT_ID = '@payment1267';
 
 function uid(n=8){ return Math.random().toString(36).substring(2,2+n) }
@@ -248,8 +252,9 @@ function loadUsers(){ users = JSON.parse(localStorage.getItem('users')||'{}'); }
 let users = {};
 let currentUserId = localStorage.getItem('currentUserId') || null;
 
-// register modal controls
+/* ----- Register modal controls ----- */
 function openRegister(edit=false){
+  loadUsers(); // ensure users loaded before reading currentUserId
   document.getElementById('modal').style.display = 'flex';
   if(edit && currentUserId && users[currentUserId]){
     document.getElementById('regName').value = users[currentUserId].name || '';
@@ -271,6 +276,7 @@ function skipRegister(){
   refreshUI();
 }
 
+/* ----- doRegister (single definition, fixed) ----- */
 function doRegister(){
   loadUsers();
   const name = (document.getElementById('regName').value||'').trim();
@@ -279,15 +285,21 @@ function doRegister(){
   const id = 'u_'+uid(8);
   const invite = 'PT-'+Math.floor(1000+Math.random()*9000);
   users[id] = { id, name, wallet, balance:0, tasks:{}, withdraws:[], inviteCode:invite };
-  // referral credit logic
+
+  // referral credit logic: accept either URL param or pendingRef stored earlier
   const params = new URLSearchParams(location.search);
-  const ref = params.get('ref');
+  const paramRef = params.get('ref');
+  const pendingRef = localStorage.getItem('pendingRef');
+  const ref = paramRef || pendingRef;
   if(ref && users[ref]){
     users[ref].balance = (users[ref].balance || 0) + 0.01;
     users[ref].withdraws = users[ref].withdraws || [];
     users[ref].withdraws.unshift(`Referral bonus from ${name} (+$0.01) — ${new Date().toLocaleString()}`);
+    // clear pendingRef after credit
+    localStorage.removeItem('pendingRef');
     alert('Referrer credited $0.01');
   }
+
   currentUserId = id;
   saveUsers();
   localStorage.setItem('currentUserId', currentUserId);
@@ -295,6 +307,7 @@ function doRegister(){
   refreshUI();
 }
 
+/* ----- logout ----- */
 function logout(){
   localStorage.removeItem('currentUserId');
   currentUserId = null;
@@ -302,7 +315,7 @@ function logout(){
   openRegister();
 }
 
-// ensure user present on load
+/* ----- ensure user present on load ----- */
 function ensureUser(){
   loadUsers();
   currentUserId = localStorage.getItem('currentUserId') || null;
@@ -315,7 +328,7 @@ function ensureUser(){
   }
 }
 
-// refresh UI for current user
+/* ----- refresh UI ----- */
 function refreshUI(){
   loadUsers();
   if(!currentUserId || !users[currentUserId]) return;
@@ -326,20 +339,22 @@ function refreshUI(){
   document.getElementById('profileWallet').innerText = u.wallet || '—';
   document.getElementById('profileId').innerText = currentUserId;
   document.getElementById('refLink').value = location.origin + location.pathname + '?ref=' + currentUserId;
-  // tasks
+  // tasks UI reflect
   ['task_binanance','task_emoney','task_panda'].forEach(k=>{
     const el = document.getElementById(k);
-    if(u.tasks && u.tasks[k]){
-      if(el) el.innerHTML = '<div style="color:#88ff88;font-weight:700">✅ Completed</div>';
-    } else {
-      // if not completed, ensure default markup (in case of edits)
-      // we won't reconstruct full markup to keep original layout
+    if(el){
+      if(u.tasks && u.tasks[k]){
+        el.innerHTML = '<div style="color:#88ff88;font-weight:700">✅ Completed</div>';
+      } else {
+        // restore default inner markup if was replaced earlier (keep simple)
+        // do nothing so original markup remains if not claimed
+      }
     }
   });
   loadWithdrawHistoryUI();
 }
 
-// credit current user and save
+/* ----- credit user ----- */
 function creditUser(amount, note){
   loadUsers();
   if(!currentUserId || !users[currentUserId]){ alert('No active user — please register'); openRegister(); return; }
@@ -360,7 +375,7 @@ function openAd(url){
   creditUser(0.0001, 'Ad click');
 }
 
-// captcha
+// captcha (single regenCaptcha function)
 let currentCaptcha = '';
 function regenCaptcha(){
   const chars='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
@@ -371,7 +386,7 @@ function regenCaptcha(){
 }
 regenCaptcha();
 
-function focusCaptcha(){ document.querySelector('[data-tab="earn"]').click(); window.scrollTo({top:0, behavior:'smooth'}); document.getElementById('captchaInput').focus(); }
+function focusCaptcha(){ document.querySelector('[data-tab="earn"]').click(); window.scrollTo({top:0, behavior:'smooth'}); const el=document.getElementById('captchaInput'); if(el) el.focus(); }
 
 function submitCaptcha(){
   const v = (document.getElementById('captchaInput').value||'').trim().toUpperCase();
@@ -489,11 +504,10 @@ document.querySelectorAll('.tabBtn').forEach(btn=>{
   loadUsers();
   currentUserId = localStorage.getItem('currentUserId') || null;
   if(currentUserId && !users[currentUserId]){ currentUserId = null; localStorage.removeItem('currentUserId'); }
-  // check referral param: if present and there is an existing user (inviter) we store ref in localStorage to credit upon registration
+  // check referral param: if present store pendingRef (we will credit on registration if inviter exists in local users)
   const params = new URLSearchParams(window.location.search);
   const ref = params.get('ref');
-  if(ref && users[ref]) {
-    // If someone opens link and registers later, the register flow will credit inviter. To handle direct case where current user already exists, we do nothing.
+  if(ref) {
     localStorage.setItem('pendingRef', ref);
   }
   if(!currentUserId){
@@ -509,25 +523,7 @@ document.querySelectorAll('.tabBtn').forEach(btn=>{
   window.regenCaptcha = regenCaptcha;
 })();
 
-// ensure captcha regen function (duplicate-safe)
-function regenCaptcha(){
-  const chars='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
-  let s=''; for(let i=0;i<6;i++) s+=chars.charAt(Math.floor(Math.random()*chars.length));
-  currentCaptcha = s;
-  const el = document.getElementById('captchaCode'); if(el) el.innerText = currentCaptcha;
-  const msg = document.getElementById('captchaMsg'); if(msg) msg.innerText = '';
-}
-
-// register via modal button (when modal open and user clicks register)
-function doRegister(){
-  // reuse function defined above; keep in sync
-  doRegister; // noop to avoid eslint warnings
-}
-// NOTE: we defined doRegister earlier as a different function name — to avoid duplication we wired modal buttons to doRegister() above; ensure they call the correct function
-// But earlier doRegister function exists; if not, fallback to doRegister handled above.
-// (In this script, doRegister is defined earlier — leave as is.)
-
-// Provide backwards-compatible aliases
+/* Provide aliases for global access */
 window.openAd = openAd;
 window.submitCaptcha = submitCaptcha;
 window.regenCaptcha = regenCaptcha;
