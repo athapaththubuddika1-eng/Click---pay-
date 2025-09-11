@@ -1,147 +1,314 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="si">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Click Rewards</title>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Ads Click Pay — Panda Technic</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
 <style>
-body{font-family:sans-serif;margin:0;padding:0;background:#f9f9f9;}
-header{background:#222;color:#fff;padding:10px;text-align:center;}
-section{padding:15px;}
-.card{background:#fff;margin-bottom:10px;padding:10px;border-radius:8px;box-shadow:0 0 5px rgba(0,0,0,0.1);}
-button{background:#007bff;color:white;padding:8px 12px;border:none;border-radius:6px;margin-top:5px;cursor:pointer;}
-input,select{padding:8px;width:95%;margin:5px 0;border:1px solid #ccc;border-radius:5px;}
-.hidden{display:none;}
+  /* (short styles — keep as before) */
+  :root{--muted:#9fb3c8;--card-bg:rgba(255,255,255,0.04);--glass:rgba(255,255,255,0.03);}
+  *{box-sizing:border-box}html,body{height:100%;margin:0;font-family:Inter,system-ui,Roboto,Arial;background:#031021;color:#e6eef6}
+  body::before{content:"";position:fixed;inset:0;background:linear-gradient(rgba(2,6,12,0.7), rgba(3,10,20,0.7));z-index:0}
+  .app{position:relative;z-index:1;max-width:520px;margin:24px auto;height:94vh;border-radius:14px;overflow:hidden;display:flex;flex-direction:column;border:1px solid rgba(255,255,255,0.03);box-shadow:0 12px 40px rgba(0,0,0,0.6);background:linear-gradient(180deg, rgba(2,6,12,0.3), rgba(2,6,12,0.2));}
+  header{display:flex;gap:12px;align-items:center;padding:18px 18px;border-bottom:1px solid rgba(255,255,255,0.02)}
+  .logo{width:56px;height:56px;border-radius:10px;background:linear-gradient(135deg,#06b6d4,#0ea5a3);display:flex;align-items:center;justify-content:center;font-weight:800;color:#012;font-size:20px}
+  main{padding:14px;flex:1;overflow:auto}
+  .card{background:var(--card-bg);padding:14px;border-radius:12px;margin-bottom:12px;border:1px solid rgba(255,255,255,0.02)}
+  .small{color:var(--muted);font-size:13px}
+  .actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+  .btn{padding:10px 12px;border-radius:9px;border:none;cursor:pointer;font-weight:700;color:#042026;background:linear-gradient(90deg,#06b6d4,#0ea5a3)}
+  .btn.ghost{background:transparent;color:var(--muted);border:1px solid rgba(255,255,255,0.04)}
+  input[type="text"], input[type="number"]{width:100%;padding:10px;border-radius:8px;border:none;margin-top:8px;background:rgba(255,255,255,0.02);color:#e6eef6}
+  .modal-back{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.6);z-index:60}
+  .modal{width:92%;max-width:420px;background:linear-gradient(180deg,#021428,#03202a);padding:18px;border-radius:12px;border:1px solid rgba(255,255,255,0.03);}
+  footer{padding:10px;text-align:center;color:var(--muted);font-size:12px;border-top:1px solid rgba(255,255,255,0.02)}
+  @media(max-width:520px){.app{margin:10px;height:98vh}}
 </style>
 </head>
 <body>
+  <div class="app" id="app">
+    <header>
+      <div class="logo">ACP</div>
+      <div>
+        <h1>Ads Click Pay</h1>
+        <div class="small">Panda Technic — Earn by watching ads & joining channels</div>
+      </div>
+    </header>
 
-<header>
-  <h2>Click Rewards</h2>
-</header>
+    <main>
+      <!-- Balance card -->
+      <div class="card">
+        <div class="small">Your balance</div>
+        <div id="balanceDisplay" style="font-weight:700;font-size:20px">$0.00000</div>
+        <div class="small">Invite code: <span id="inviteCode">—</span></div>
+      </div>
 
-<section id="registerSection">
-  <div class="card">
-    <h3>Register</h3>
-    <input id="regName" placeholder="Enter your name">
-    <input id="regWallet" placeholder="Enter Binance ID / POL Address">
-    <button onclick="doRegister()">Register</button>
+      <!-- Ads / captcha -->
+      <div class="card">
+        <strong>Click Ads — $0.0001 each</strong>
+        <div class="small">Open ad → credit on return.</div>
+        <div class="actions">
+          <button class="btn" onclick="openAd('https://www.revenuecpmgate.com/yc4zy360?key=668ce693eb60fa7cc11dd002b6a3adab')">Open Ad 1</button>
+          <button class="btn" onclick="openAd('https://www.revenuecpmgate.com/ds7h6p686?key=1f2f476c9ca95b3a721183aac2890d9a')">Open Ad 2</button>
+          <button class="btn ghost" onclick="focusCaptcha()">Go to CAPTCHA</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <strong>CAPTCHA — $0.00015</strong>
+        <div id="captchaCode" style="margin-top:10px;font-weight:800;font-size:20px;letter-spacing:3px"></div>
+        <input id="captchaInput" type="text" placeholder="Type CAPTCHA code" />
+        <div class="actions">
+          <button class="btn" onclick="submitCaptcha()">Submit CAPTCHA</button>
+          <button class="btn ghost" onclick="regenCaptcha()">Regenerate</button>
+        </div>
+        <div id="captchaMsg" class="small" style="margin-top:8px"></div>
+      </div>
+
+      <!-- Tasks -->
+      <div class="card">
+        <strong>Telegram Tasks — $0.01 each</strong>
+        <div class="small">Join channel and Claim</div>
+        <div style="margin-top:12px">
+          <div id="task_binanance" style="display:flex;justify-content:space-between;align-items:center;padding:8px;border-radius:8px;background:rgba(255,255,255,0.02)">
+            <div>
+              <div style="font-weight:700">Binanance Earn</div>
+              <div class="small">https://t.me/binananceearn1</div>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:6px">
+              <button class="btn ghost small" onclick="joinChannel('task_binanance','https://t.me/binananceearn1')">Join</button>
+              <button class="btn small" id="claim_task_binanance" style="display:none" onclick="claimTask('task_binanance')">Claim</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Referral + Withdraw + Profile -->
+      <div class="card">
+        <strong>Referral</strong>
+        <div class="small">Share link — referrer gets $0.01 on register</div>
+        <div style="display:flex;gap:8px;margin-top:10px">
+          <input id="refLink" type="text" readonly style="flex:1"/>
+          <button class="btn ghost" onclick="copyRef()">Copy</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <strong>Withdraw</strong>
+        <div class="small">Minimum withdraw: $0.15</div>
+        <input id="withdrawAmount" type="number" placeholder="Amount (USDT)"/>
+        <select id="withdrawMethod">
+          <option value="binance">Binance ID</option>
+          <option value="pol">POL Address</option>
+        </select>
+        <input id="withdrawWallet" type="text" placeholder="Enter Binance ID or POL Address"/>
+        <div style="display:flex;gap:8px;margin-top:10px">
+          <button class="btn" onclick="requestWithdraw()">Request Withdraw</button>
+        </div>
+        <div style="margin-top:12px">
+          <div style="font-weight:700">Withdraw History</div>
+          <div id="withdrawHistory" class="small" style="margin-top:8px"></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <strong>Profile</strong>
+        <div class="small">Name: <span id="profileName">—</span></div>
+        <div class="small">Wallet: <span id="profileWallet">—</span></div>
+        <div style="margin-top:10px;display:flex;gap:8px">
+          <button class="btn ghost" onclick="openRegister(true)">Edit Profile</button>
+          <button class="btn ghost" onclick="logout()">Logout</button>
+        </div>
+      </div>
+
+    </main>
+    <footer>Ads Click Pay — Panda Technic · Demo</footer>
   </div>
-</section>
 
-<section id="appSection" class="hidden">
-  <div class="card">
-    <h3>Welcome, <span id="userName"></span></h3>
-    <p><b>Your Wallet:</b> <span id="userWallet"></span></p>
-    <p><b>Balance:</b> $<span id="userBalance">0.00</span></p>
-    <p><b>Your Referral Link:</b><br><input id="refLink" readonly></p>
-    <button onclick="logout()">Logout</button>
+  <!-- Register modal -->
+  <div id="modal" class="modal-back" style="display:none">
+    <div class="modal">
+      <h3>Create your account</h3>
+      <div class="small">Register to save balance & withdraws on this device.</div>
+      <input id="regName" type="text" placeholder="Display name (required)"/>
+      <input id="regWallet" type="text" placeholder="Binance ID or POL address (optional)"/>
+      <div style="display:flex;gap:8px;margin-top:12px">
+        <button class="btn" onclick="doRegister()">Register</button>
+        <button class="btn ghost" onclick="skipRegister()">Skip (guest)</button>
+      </div>
+    </div>
   </div>
-
-  <div class="card">
-    <h3>Earn Tasks</h3>
-    <button onclick="completeTask()">✅ Complete a Task (+$0.01)</button>
-  </div>
-
-  <div class="card">
-    <h3>Withdraw</h3>
-    <input type="number" id="withdrawAmount" placeholder="Enter Amount">
-    <button onclick="withdraw()">Request Withdraw</button>
-    <p><b>History:</b></p>
-    <ul id="withdrawHistory"></ul>
-  </div>
-</section>
 
 <script>
-let users = JSON.parse(localStorage.getItem("users")||"{}");
-let currentUserId = localStorage.getItem("currentUserId")||null;
+/* ----- CONFIG (YOU PROVIDED) ----- */
+const BOT_TOKEN = '8202242013:AAGEpIn3OveiXZ2Y15WCTCKIdSH3lQ0ATNs';
+const CHAT_ID  = '5419054691'; // admin chat id
 
-// Telegram Bot Details
-const BOT_USERNAME = "@Adsclickpaybot"; 
-const BOT_TOKEN = "YOUR_BOT_TOKEN"; // Add your bot token here
-const CHAT_ID = "YOUR_ADMIN_CHAT_ID"; // Add admin chat id here
+/* ----- storage helpers ----- */
+function uid(n=8){ return Math.random().toString(36).substring(2,2+n) }
+function saveUsers(){ localStorage.setItem('users', JSON.stringify(users)); }
+function loadUsers(){ users = JSON.parse(localStorage.getItem('users')||'{}'); }
 
-function uid(len){return Math.random().toString(36).substr(2,len);}
-function saveUsers(){localStorage.setItem("users", JSON.stringify(users));}
+let users = {};
+let currentUserId = localStorage.getItem('currentUserId') || null;
 
-function doRegister(){
-  const name = document.getElementById("regName").value.trim();
-  const wallet = document.getElementById("regWallet").value.trim();
-  if(!name || !wallet){alert("Please fill all fields"); return;}
-  const id = "u_"+uid(8);
-  const invite = "PT-"+Math.floor(1000+Math.random()*9000);
-  users[id] = {id, name, wallet, balance:0, inviteCode:invite, withdraws:[]};
-
-  // Referral logic
-  const params = new URLSearchParams(location.search);
-  const ref = params.get("ref");
-  if(ref && users[ref]){
-    users[ref].balance = (users[ref].balance || 0) + 0.01;
-    users[ref].withdraws.unshift(`Referral bonus from ${name} (+$0.01) — ${new Date().toLocaleString()}`);
+/* ----- Register modal controls ----- */
+function openRegister(edit=false){
+  loadUsers();
+  document.getElementById('modal').style.display = 'flex';
+  if(edit && currentUserId && users[currentUserId]){
+    document.getElementById('regName').value = users[currentUserId].name || '';
+    document.getElementById('regWallet').value = users[currentUserId].wallet || '';
+  } else {
+    document.getElementById('regName').value = '';
+    document.getElementById('regWallet').value = '';
   }
+}
 
+function skipRegister(){
+  loadUsers();
+  const id = 'guest_'+uid(6);
+  users[id] = { id, name:'Guest', wallet:'', balance:0, tasks:{}, withdraws:[], inviteCode: 'PT-'+Math.floor(1000+Math.random()*9000) };
   currentUserId = id;
   saveUsers();
-  localStorage.setItem("currentUserId", currentUserId);
+  localStorage.setItem('currentUserId', currentUserId);
+  document.getElementById('modal').style.display='none';
   refreshUI();
 }
 
-function refreshUI(){
-  if(!currentUserId){document.getElementById("registerSection").classList.remove("hidden");
-  document.getElementById("appSection").classList.add("hidden"); return;}
-
-  document.getElementById("registerSection").classList.add("hidden");
-  document.getElementById("appSection").classList.remove("hidden");
-
-  const user = users[currentUserId];
-  document.getElementById("userName").textContent = user.name;
-  document.getElementById("userWallet").textContent = user.wallet;
-  document.getElementById("userBalance").textContent = user.balance.toFixed(2);
-  document.getElementById("refLink").value = `${location.origin}${location.pathname}?ref=${currentUserId}`;
-  
-  const list = document.getElementById("withdrawHistory");
-  list.innerHTML="";
-  (user.withdraws||[]).forEach(w=>{const li=document.createElement("li");li.textContent=w;list.appendChild(li);});
-}
-
-function completeTask(){
-  const user = users[currentUserId];
-  user.balance += 0.01;
-  user.withdraws.unshift(`Task Completed (+$0.01) — ${new Date().toLocaleString()}`);
+function doRegister(){
+  loadUsers();
+  const name = (document.getElementById('regName').value||'').trim();
+  const wallet = (document.getElementById('regWallet').value||'').trim();
+  if(!name){ alert('Please enter display name'); return; }
+  const id = 'u_'+uid(8);
+  const invite = 'PT-'+Math.floor(1000+Math.random()*9000);
+  users[id] = { id, name, wallet, balance:0, tasks:{}, withdraws:[], inviteCode:invite };
+  // referral logic: credit pending ref if exists
+  const params = new URLSearchParams(location.search);
+  const paramRef = params.get('ref');
+  const pendingRef = localStorage.getItem('pendingRef');
+  const ref = paramRef || pendingRef;
+  if(ref && users[ref]){
+    users[ref].balance = (users[ref].balance || 0) + 0.01;
+    users[ref].withdraws = users[ref].withdraws || [];
+    users[ref].withdraws.unshift(`Referral bonus from ${name} (+$0.01) — ${new Date().toLocaleString()}`);
+    localStorage.removeItem('pendingRef');
+    alert('Referrer credited $0.01');
+  }
+  currentUserId = id;
   saveUsers();
+  localStorage.setItem('currentUserId', currentUserId);
+  document.getElementById('modal').style.display='none';
   refreshUI();
-}
-
-function withdraw(){
-  const amount = parseFloat(document.getElementById("withdrawAmount").value);
-  const user = users[currentUserId];
-  if(!amount || amount<=0){alert("Enter valid amount");return;}
-  if(user.balance < amount){alert("Insufficient balance");return;}
-
-  user.balance -= amount;
-  user.withdraws.unshift(`Withdraw Request: $${amount} — ${new Date().toLocaleString()}`);
-  saveUsers();
-  refreshUI();
-
-  // Telegram Notification
-  fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`,{
-    method:"POST",
-    headers:{"Content-Type":"application/json"},
-    body: JSON.stringify({
-      chat_id: CHAT_ID,
-      text: `💸 *Withdraw Request*\n👤 User: ${user.name}\n🆔 ID: ${user.id}\n💰 Amount: $${amount}\n🏦 Wallet: ${user.wallet}\n\nBot: ${BOT_USERNAME}`,
-      parse_mode: "Markdown"
-    })
-  });
 }
 
 function logout(){
-  localStorage.removeItem("currentUserId");
+  localStorage.removeItem('currentUserId');
   currentUserId = null;
+  alert('Logged out. You will be asked to register.');
+  openRegister();
+}
+
+/* ----- UI refresh ----- */
+function refreshUI(){
+  loadUsers();
+  if(!currentUserId || !users[currentUserId]){ document.getElementById('modal').style.display='flex'; return; }
+  const u = users[currentUserId];
+  document.getElementById('balanceDisplay').innerText = '$' + ((u.balance||0).toFixed(5));
+  document.getElementById('inviteCode').innerText = u.inviteCode || '—';
+  document.getElementById('profileName').innerText = u.name || '—';
+  document.getElementById('profileWallet').innerText = u.wallet || '—';
+  document.getElementById('refLink').value = location.origin + location.pathname + '?ref=' + currentUserId;
+  loadWithdrawHistoryUI();
+}
+
+/* ----- credit & ads/captcha ----- */
+function creditUser(amount, note){
+  loadUsers();
+  if(!currentUserId || !users[currentUserId]){ alert('No active user — please register'); openRegister(); return; }
+  const u = users[currentUserId];
+  u.balance = (u.balance || 0) + amount;
+  u.withdraws = u.withdraws || [];
+  u.withdraws.unshift(`${note} (+$${amount.toFixed(5)}) — ${new Date().toLocaleString()}`);
+  users[currentUserId] = u;
+  saveUsers();
   refreshUI();
 }
 
-refreshUI();
+function openAd(url){ window.open(url,'_blank'); creditUser(0.0001, 'Ad click'); }
+
+/* captcha */
+let currentCaptcha = '';
+function regenCaptcha(){ const chars='ABCDEFGHJKLMNPQRSTUVWXYZ23456789'; let s=''; for(let i=0;i<6;i++) s+=chars.charAt(Math.floor(Math.random()*chars.length)); currentCaptcha = s; const el=document.getElementById('captchaCode'); if(el) el.innerText = currentCaptcha; const msg=document.getElementById('captchaMsg'); if(msg) msg.innerText=''; }
+regenCaptcha();
+function focusCaptcha(){ document.querySelector('[data-tab="earn"]')?.click(); document.getElementById('captchaInput').focus(); }
+function submitCaptcha(){ const v=(document.getElementById('captchaInput').value||'').trim().toUpperCase(); if(!v){alert('Enter CAPTCHA');return;} if(v===currentCaptcha){ creditUser(0.00015,'CAPTCHA'); window.open('https://www.revenuecpmgate.com/yc4zy360?key=668ce693eb60fa7cc11dd002b6a3adab','_blank'); document.getElementById('captchaMsg').innerText='CAPTCHA correct — credited!'; document.getElementById('captchaInput').value=''; regenCaptcha(); } else { document.getElementById('captchaMsg').innerText='Incorrect CAPTCHA — try again'; } }
+
+/* ----- tasks ----- */
+function joinChannel(taskId,url){ window.open(url,'_blank'); const claimBtn=document.getElementById('claim_'+taskId); if(claimBtn) claimBtn.style.display='inline-block'; }
+function claimTask(taskId){ loadUsers(); if(!currentUserId || !users[currentUserId]){ openRegister(); return; } const u=users[currentUserId]; u.tasks=u.tasks||{}; if(u.tasks[taskId]){ alert('Already claimed'); return; } u.tasks[taskId]=true; users[currentUserId]=u; saveUsers(); creditUser(0.01,'Task claim'); const el=document.getElementById(taskId); if(el) el.innerHTML = '<div style="color:#88ff88;font-weight:700">✅ Completed</div>'; }
+
+/* ----- withdraw (direct Telegram) ----- */
+function requestWithdraw(){
+  loadUsers();
+  if(!currentUserId || !users[currentUserId]){ openRegister(); return; }
+  const amt = parseFloat(document.getElementById('withdrawAmount').value || '0');
+  const wallet = (document.getElementById('withdrawWallet').value||'').trim();
+  const method = document.getElementById('withdrawMethod').value;
+  if(isNaN(amt) || amt < 0.15){ alert('Minimum withdraw is $0.15'); return; }
+  const u = users[currentUserId];
+  if((u.balance||0) < amt){ alert('Insufficient balance'); return; }
+  u.balance = (u.balance||0) - amt;
+  u.withdraws = u.withdraws || [];
+  const rec = `Withdraw $${amt.toFixed(2)} via ${method} — ${wallet} (${new Date().toLocaleString()})`;
+  u.withdraws.unshift(rec);
+  users[currentUserId] = u;
+  saveUsers();
+  // send to Telegram (direct, insecure)
+  notifyTelegram(u, amt, wallet, method);
+  alert('Withdraw requested — notification sent.');
+  refreshUI();
+  document.getElementById('withdrawAmount').value=''; document.getElementById('withdrawWallet').value='';
+}
+
+function loadWithdrawHistoryUI(){
+  loadUsers();
+  if(!currentUserId || !users[currentUserId]) return;
+  const u=users[currentUserId];
+  const container=document.getElementById('withdrawHistory');
+  container.innerHTML='';
+  if(u.withdraws && u.withdraws.length){
+    u.withdraws.forEach(r=>{ const d=document.createElement('div'); d.className='small'; d.style.marginBottom='8px'; d.innerText=r; container.appendChild(d); });
+  } else {
+    container.innerHTML='<div class="small">No withdraw history</div>';
+  }
+}
+
+/* ----- Telegram notify (direct) ----- */
+function notifyTelegram(user, amount, wallet, method){
+  const text = `📢 New Withdraw Request\nUser: ${user.name}\nID: ${user.id}\nAmount: $${amount.toFixed(2)}\nMethod: ${method}\nWallet: ${wallet}\nDate: ${new Date().toLocaleString()}`;
+  fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({ chat_id: CHAT_ID, text })
+  }).then(r=>r.json()).then(d=>console.log('tg',d)).catch(e=>console.warn(e));
+}
+
+/* ----- referral copy ----- */
+function copyRef(){ const v=document.getElementById('refLink').value; navigator.clipboard.writeText(v).then(()=>alert('Referral link copied')); }
+
+/* ----- init ----- */
+(function init(){
+  loadUsers();
+  currentUserId = localStorage.getItem('currentUserId') || null;
+  if(currentUserId && !users[currentUserId]){ currentUserId = null; localStorage.removeItem('currentUserId'); }
+  const params = new URLSearchParams(window.location.search);
+  const ref = params.get('ref');
+  if(ref) localStorage.setItem('pendingRef', ref);
+  if(!currentUserId) document.getElementById('modal').style.display='flex'; else refreshUI();
+})();
 </script>
 </body>
 </html>
