@@ -1,281 +1,303 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Ads Click Pay - Panda Technic</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ads Click Pay</title>
   <style>
     body {
+      font-family: "Poppins", sans-serif;
       margin: 0;
-      font-family: Arial, sans-serif;
-      background: url('https://images.unsplash.com/photo-1605902711622-cfb43c4437d1') no-repeat center center fixed;
+      padding: 0;
+      background: url('https://images.unsplash.com/photo-1641931213518-4a43259c59e5') no-repeat center center fixed;
       background-size: cover;
       color: #fff;
-      text-align: center;
     }
     .overlay {
-      background: rgba(0,0,0,0.7);
+      background: rgba(0,0,0,0.65);
       min-height: 100vh;
-      padding: 20px;
+      padding-bottom: 80px;
     }
     h1 {
-      font-size: 28px;
-      margin-bottom: 10px;
+      text-align: center;
+      padding: 20px 0;
+      font-size: 2rem;
+      color: #ffcc00;
+      text-shadow: 0px 0px 8px #000;
     }
-    nav {
-      display: flex;
-      justify-content: space-around;
-      margin: 20px 0;
+    .balance-card {
+      max-width: 400px;
+      margin: 0 auto 20px;
+      padding: 20px;
+      border-radius: 15px;
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(10px);
+      text-align: center;
+      box-shadow: 0px 4px 12px rgba(0,0,0,0.4);
     }
-    nav button {
-      flex: 1;
-      margin: 5px;
-      padding: 12px;
-      background: #ff9800;
-      border: none;
-      border-radius: 8px;
-      color: #fff;
-      font-size: 16px;
-      cursor: pointer;
-    }
-    nav button:hover {
-      background: #e68900;
+    .balance-card span {
+      font-size: 1.6rem;
+      font-weight: bold;
+      color: #00ffcc;
     }
     .tab {
       display: none;
-      margin-top: 20px;
     }
-    .active {
+    .tab.active {
       display: block;
     }
     .card {
-      background: rgba(255,255,255,0.1);
-      padding: 15px;
-      border-radius: 10px;
-      margin: 10px auto;
-      max-width: 400px;
+      background: rgba(255,255,255,0.12);
+      margin: 15px auto;
+      padding: 20px;
+      border-radius: 12px;
+      max-width: 450px;
+      box-shadow: 0px 4px 10px rgba(0,0,0,0.4);
+      backdrop-filter: blur(8px);
     }
     input, select {
       padding: 10px;
       margin: 8px 0;
-      width: 90%;
+      width: 95%;
+      border-radius: 8px;
       border: none;
-      border-radius: 6px;
+      outline: none;
+      font-size: 1rem;
     }
     .btn {
-      display: block;
-      width: 90%;
-      margin: 10px auto;
-      padding: 12px;
-      background: #4caf50;
+      background: linear-gradient(45deg, #ffcc00, #ff8800);
+      color: #000;
+      padding: 12px 20px;
       border: none;
-      border-radius: 6px;
-      color: white;
-      font-size: 16px;
+      border-radius: 10px;
       cursor: pointer;
+      margin-top: 10px;
+      font-weight: bold;
+      transition: all 0.3s ease;
     }
     .btn:hover {
-      background: #45a049;
+      transform: scale(1.05);
+      box-shadow: 0px 4px 15px rgba(255,200,0,0.6);
     }
-    #balance {
-      font-size: 20px;
+    nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background: rgba(0,0,0,0.85);
+      display: flex;
+      justify-content: space-around;
+      padding: 12px 0;
+      backdrop-filter: blur(8px);
+    }
+    nav button {
+      background: none;
+      border: none;
+      color: #ffcc00;
+      font-size: 1rem;
       font-weight: bold;
-      margin: 15px 0;
+      cursor: pointer;
+      transition: 0.3s;
     }
-    .task-item {
-      margin: 10px;
-      padding: 10px;
-      background: rgba(255,255,255,0.15);
-      border-radius: 8px;
+    nav button:hover {
+      color: #fff;
+      transform: scale(1.1);
     }
-    .history-item {
-      background: rgba(255,255,255,0.1);
-      margin: 5px;
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+      font-size: 0.9rem;
+    }
+    table, th, td {
+      border: 1px solid rgba(255,255,255,0.3);
       padding: 8px;
-      border-radius: 6px;
+    }
+    th {
+      background: rgba(0,0,0,0.6);
+      color: #ffcc00;
+    }
+    td {
+      background: rgba(255,255,255,0.1);
     }
   </style>
 </head>
 <body>
   <div class="overlay">
-    <h1>💰 Ads Click Pay - Panda Technic</h1>
-    <p id="balance">Balance: $0.0000</p>
+    <h1>🚀 Ads Click Pay</h1>
+    <div class="balance-card">
+      Balance: $<span id="balance">0.00</span>
+    </div>
 
-    <!-- Navigation -->
-    <nav>
-      <button onclick="openTab('earn')">Earn</button>
-      <button onclick="openTab('tasks')">Tasks</button>
-      <button onclick="openTab('withdraw')">Withdraw</button>
-      <button onclick="openTab('profile')">Profile</button>
-    </nav>
+    <!-- Register Form -->
+    <div id="registerForm" class="card">
+      <h2>📝 Register</h2>
+      <input type="text" id="username" placeholder="Enter your name">
+      <input type="text" id="binanceId" placeholder="Enter Binance ID">
+      <button class="btn" onclick="register()">Register</button>
+    </div>
 
     <!-- Earn Tab -->
     <div id="earn" class="tab active">
       <div class="card">
-        <h3>📺 Watch Ads ($0.0001 each)</h3>
-        <button class="btn" onclick="watchAd('https://www.revenuecpmgate.com/yc4zy360?key=668ce693eb60fa7cc11dd002b6a3adab')">Watch Ad 1</button>
-        <button class="btn" onclick="watchAd('https://www.revenuecpmgate.com/ds7h6p686?key=1f2f476c9ca95b3a721183aac2890d9a')">Watch Ad 2</button>
-        <button class="btn" onclick="watchAd('https://www.revenuecpmgate.com/r9fnmmre1?key=26bdfcbc52f583dbc0080aedcc0b6131')">Watch Ad 3</button>
+        <h3>Telegram Tasks</h3>
+        <button class="btn" onclick="joinChannel()">Join Channel</button>
       </div>
       <div class="card">
-        <h3>🔑 Captcha ($0.00015 each)</h3>
-        <p id="captcha-question"></p>
-        <input type="text" id="captcha-answer" placeholder="Enter answer" />
-        <button class="btn" onclick="checkCaptcha()">Submit</button>
-      </div>
-    </div>
-
-    <!-- Tasks Tab -->
-    <div id="tasks" class="tab">
-      <div class="task-item">
-        <p>Join Channel: <b>Binanance Earn</b></p>
-        <a href="https://t.me/binananceearn1" target="_blank"><button class="btn">Join</button></a>
-        <button class="btn" onclick="claimTask(1)">Claim</button>
-      </div>
-      <div class="task-item">
-        <p>Join Channel: <b>Emoney Web</b></p>
-        <a href="https://t.me/emoneyweb" target="_blank"><button class="btn">Join</button></a>
-        <button class="btn" onclick="claimTask(2)">Claim</button>
-      </div>
-      <div class="task-item">
-        <p>Join Channel: <b>Panda Technic</b></p>
-        <a href="https://t.me/panda_technic" target="_blank"><button class="btn">Join</button></a>
-        <button class="btn" onclick="claimTask(3)">Claim</button>
-      </div>
-    </div>
-
-    <!-- Withdraw Tab -->
-    <div id="withdraw" class="tab">
-      <div class="card">
-        <h3>💸 Withdraw</h3>
-        <input type="text" id="withdrawId" placeholder="Enter Binance ID or POL address" />
-        <select id="withdrawMethod">
-          <option value="Binance">Binance</option>
-          <option value="POL">POL Coin</option>
-        </select>
-        <input type="number" id="withdrawAmount" placeholder="Amount (min 0.03)" step="0.01" />
-        <button class="btn" onclick="withdraw()">Withdraw</button>
+        <h3>Watch Ads</h3>
+        <button class="btn" onclick="watchAd()">Watch Ad</button>
       </div>
       <div class="card">
-        <h3>📜 Withdraw History</h3>
-        <div id="history"></div>
+        <h3>Captcha</h3>
+        <input type="text" id="captcha" placeholder="Type '1234'">
+        <button class="btn" onclick="submitCaptcha()">Submit</button>
       </div>
     </div>
 
     <!-- Profile Tab -->
     <div id="profile" class="tab">
       <div class="card">
-        <h3>👤 Profile</h3>
-        <p>Your Binance ID (for withdraw):</p>
-        <input type="text" id="profileBinance" placeholder="Enter Binance ID" />
-        <button class="btn" onclick="saveProfile()">Save</button>
-        <p>Referral Link:</p>
-        <input type="text" id="refLink" readonly />
+        <h2>👤 Profile</h2>
+        <p>Name: <span id="pName"></span></p>
+        <p>Binance ID: <span id="pBinance"></span></p>
+        <p>Your Referral Link:</p>
+        <input type="text" id="refLink" readonly>
       </div>
     </div>
+
+    <!-- Withdraw Tab -->
+    <div id="withdraw" class="tab">
+      <div class="card">
+        <h2>💸 Withdraw</h2>
+        <p>Minimum Withdraw: $0.20</p>
+        <select id="withdrawBinance"></select>
+        <button class="btn" onclick="withdraw()">Withdraw</button>
+        <div>
+          <h3>📜 History</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>Amount</th>
+                <th>Binance ID</th>
+              </tr>
+            </thead>
+            <tbody id="history"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <nav>
+      <button onclick="showTab('earn')">Earn</button>
+      <button onclick="showTab('profile')">Profile</button>
+      <button onclick="showTab('withdraw')">Withdraw</button>
+    </nav>
   </div>
 
   <script>
     let balance = parseFloat(localStorage.getItem("balance")) || 0;
+    let user = JSON.parse(localStorage.getItem("user")) || null;
     let history = JSON.parse(localStorage.getItem("history")) || [];
-    let profile = JSON.parse(localStorage.getItem("profile")) || { binanceId: "" };
-    let tasksDone = JSON.parse(localStorage.getItem("tasksDone")) || {};
-    let captchaAnswer;
 
-    function updateBalance() {
-      document.getElementById("balance").innerText = "Balance: $" + balance.toFixed(5);
+    document.getElementById("balance").innerText = balance.toFixed(2);
+
+    function save() {
       localStorage.setItem("balance", balance);
+      localStorage.setItem("user", JSON.stringify(user));
+      localStorage.setItem("history", JSON.stringify(history));
     }
 
-    function openTab(tab) {
+    function register() {
+      let name = document.getElementById("username").value;
+      let binance = document.getElementById("binanceId").value;
+      if (!name || !binance) {
+        alert("⚠️ Fill all fields!");
+        return;
+      }
+      user = { name, binance, ref: "https://myapp.com/?ref=" + name };
+      document.getElementById("pName").innerText = user.name;
+      document.getElementById("pBinance").innerText = user.binance;
+      document.getElementById("refLink").value = user.ref;
+      document.getElementById("withdrawBinance").innerHTML = `<option>${user.binance}</option>`;
+      document.getElementById("registerForm").style.display = "none";
+      save();
+    }
+
+    function showTab(tab) {
       document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
       document.getElementById(tab).classList.add("active");
     }
 
-    // Ads
-    function watchAd(link) {
-      window.open(link, "_blank");
-      balance += 0.0001;
-      updateBalance();
+    function joinChannel() {
+      balance += 0.001;
+      document.getElementById("balance").innerText = balance.toFixed(2);
+      save();
+      alert("✅ Channel joined! +$0.001");
     }
 
-    // Captcha
-    function generateCaptcha() {
-      let a = Math.floor(Math.random() * 10) + 1;
-      let b = Math.floor(Math.random() * 10) + 1;
-      captchaAnswer = a + b;
-      document.getElementById("captcha-question").innerText = `What is ${a} + ${b}?`;
+    function watchAd() {
+      let adWin = window.open("https://example.com/ad", "_blank");
+      let check = setInterval(() => {
+        if (adWin.closed) {
+          clearInterval(check);
+          try {
+            if (adWin.location && adWin.location.hostname === "www.google.com") {
+              alert("⚠️ Invalid Ad. No reward added.");
+            } else {
+              balance += 0.0001;
+              document.getElementById("balance").innerText = balance.toFixed(2);
+              save();
+              alert("🎉 Ad watched! +$0.0001");
+            }
+          } catch (e) {
+            balance += 0.0001;
+            document.getElementById("balance").innerText = balance.toFixed(2);
+            save();
+            alert("🎉 Ad watched! +$0.0001");
+          }
+        }
+      }, 1000);
     }
-    function checkCaptcha() {
-      let ans = document.getElementById("captcha-answer").value;
-      if (parseInt(ans) === captchaAnswer) {
+
+    function submitCaptcha() {
+      let val = document.getElementById("captcha").value;
+      if (val === "1234") {
         balance += 0.00015;
-        updateBalance();
-        alert("Correct! +$0.00015 added.");
+        document.getElementById("balance").innerText = balance.toFixed(2);
+        save();
+        alert("✅ Captcha correct! +$0.00015");
       } else {
-        alert("Wrong answer. Try again!");
+        alert("❌ Wrong captcha");
       }
-      generateCaptcha();
-      document.getElementById("captcha-answer").value = "";
     }
 
-    // Tasks
-    function claimTask(id) {
-      if (tasksDone[id]) {
-        alert("Already claimed!");
-        return;
-      }
-      balance += 0.01;
-      updateBalance();
-      tasksDone[id] = true;
-      localStorage.setItem("tasksDone", JSON.stringify(tasksDone));
-      alert("Task completed! +$0.01");
-    }
-
-    // Withdraw
     function withdraw() {
-      let id = document.getElementById("withdrawId").value || profile.binanceId;
-      let method = document.getElementById("withdrawMethod").value;
-      let amount = parseFloat(document.getElementById("withdrawAmount").value);
-
-      if (!id || amount < 0.03 || amount > balance) {
-        alert("Invalid withdraw.");
+      if (balance < 0.20) {
+        alert("⚠️ Minimum withdraw is $0.20");
         return;
       }
-
-      balance -= amount;
-      updateBalance();
-
-      let entry = `Withdraw $${amount.toFixed(2)} via ${method} → ${id}`;
-      history.push(entry);
-      localStorage.setItem("history", JSON.stringify(history));
-      renderHistory();
-
-      alert("Withdraw request sent! Check Telegram channel.");
-      window.open("https://t.me/payment1267", "_blank");
+      let binance = document.getElementById("withdrawBinance").value;
+      history.push({ amount: balance.toFixed(2), binance });
+      let tableRows = history.map(h => `<tr><td>$${h.amount}</td><td>${h.binance}</td></tr>`).join("");
+      document.getElementById("history").innerHTML = tableRows;
+      balance = 0;
+      document.getElementById("balance").innerText = balance.toFixed(2);
+      save();
+      alert("✅ Withdraw request submitted!");
     }
 
-    function renderHistory() {
-      document.getElementById("history").innerHTML = history.map(h => `<div class="history-item">${h}</div>`).join("");
+    // Load on start
+    window.onload = () => {
+      if (user) {
+        document.getElementById("registerForm").style.display = "none";
+        document.getElementById("pName").innerText = user.name;
+        document.getElementById("pBinance").innerText = user.binance;
+        document.getElementById("refLink").value = user.ref;
+        document.getElementById("withdrawBinance").innerHTML = `<option>${user.binance}</option>`;
+      }
+      let tableRows = history.map(h => `<tr><td>$${h.amount}</td><td>${h.binance}</td></tr>`).join("");
+      document.getElementById("history").innerHTML = tableRows;
     }
-
-    // Profile
-    function saveProfile() {
-      profile.binanceId = document.getElementById("profileBinance").value;
-      localStorage.setItem("profile", JSON.stringify(profile));
-      alert("Profile saved!");
-    }
-
-    function loadProfile() {
-      document.getElementById("profileBinance").value = profile.binanceId;
-      document.getElementById("refLink").value = window.location.href + "?ref=USER123";
-    }
-
-    // Init
-    updateBalance();
-    generateCaptcha();
-    renderHistory();
-    loadProfile();
   </script>
 </body>
 </html>
