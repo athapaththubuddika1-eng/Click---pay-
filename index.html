@@ -56,7 +56,6 @@
   <div class="container">
     <h1>Ads Click Pay</h1>
     <p>Balance: <span id="balance">$0.00000</span></p>
-    <p>Your referral link: <span id="refLink"></span></p>
   </div>
 
   <!-- Earn Tab -->
@@ -64,35 +63,21 @@
     <h2>Earn Money</h2>
 
     <h3>🔸 Watch Ads</h3>
-    <button class="btn" onclick="watchAd('https://www.revenuecpmgate.com/yc4zy360?key=668ce693eb60fa7cc11dd002b6a3adab')">Ad 1</button>
-    <button class="btn" onclick="watchAd('https://www.revenuecpmgate.com/ds7h6p686?key=1f2f476c9ca95b3a721183aac2890d9a')">Ad 2</button>
-    <button class="btn" onclick="watchAd('https://www.revenuecpmgate.com/r9fnmmre1?key=26bdfcbc52f583dbc0080aedcc0b6131')">Ad 3</button>
+    <a href="https://www.revenuecpmgate.com/yc4zy360?key=668ce693eb60fa7cc11dd002b6a3adab" target="_blank">
+      <button class="btn" onclick="adClicked()">Ad 1</button>
+    </a>
+    <a href="https://www.revenuecpmgate.com/ds7h6p686?key=1f2f476c9ca95b3a721183aac2890d9a" target="_blank">
+      <button class="btn" onclick="adClicked()">Ad 2</button>
+    </a>
+    <a href="https://www.revenuecpmgate.com/r9fnmmre1?key=26bdfcbc52f583dbc0080aedcc0b6131" target="_blank">
+      <button class="btn" onclick="adClicked()">Ad 3</button>
+    </a>
 
     <h3>🔸 Captcha</h3>
     <p id="captchaQuestion"></p>
     <input type="text" id="captchaInput" placeholder="Enter captcha">
     <button class="btn" onclick="checkCaptcha()">Submit</button>
     <p id="captchaMsg"></p>
-  </div>
-
-  <!-- Tasks Tab -->
-  <div id="tasks" class="container hidden">
-    <h2>Telegram Tasks</h2>
-    <div class="task" id="task1">
-      <p>Join Channel 1</p>
-      <a href="https://t.me/binananceearn1" target="_blank"><button class="btn">Join</button></a>
-      <button class="btn" onclick="claimTask(1)">Claim</button>
-    </div>
-    <div class="task" id="task2">
-      <p>Join Channel 2</p>
-      <a href="https://t.me/emoneyweb" target="_blank"><button class="btn">Join</button></a>
-      <button class="btn" onclick="claimTask(2)">Claim</button>
-    </div>
-    <div class="task" id="task3">
-      <p>Join Channel 3</p>
-      <a href="https://t.me/panda_technic" target="_blank"><button class="btn">Join</button></a>
-      <button class="btn" onclick="claimTask(3)">Claim</button>
-    </div>
   </div>
 
   <!-- Withdraw Tab -->
@@ -111,46 +96,34 @@
 
   <nav>
     <button onclick="showTab('earn')">Earn</button>
-    <button onclick="showTab('tasks')">Tasks</button>
     <button onclick="showTab('withdraw')">Withdraw</button>
   </nav>
 
 <script>
-  // === Load Data ===
+  // Load from localStorage
   let balance = parseFloat(localStorage.getItem("balance")) || 0;
-  let tasksDone = JSON.parse(localStorage.getItem("tasksDone")) || {};
   let history = JSON.parse(localStorage.getItem("history")) || [];
 
-  // Referral
-  let refId = localStorage.getItem("refId") || Math.floor(Math.random()*1000000);
-  localStorage.setItem("refId", refId);
-  document.getElementById("refLink").innerText = window.location.origin + "?ref=" + refId;
-
-  // Update balance UI
   function updateBalance() {
     document.getElementById("balance").innerText = "$" + balance.toFixed(5);
     localStorage.setItem("balance", balance);
   }
 
-  // Tabs
   function showTab(tab) {
     document.getElementById("earn").classList.add("hidden");
-    document.getElementById("tasks").classList.add("hidden");
     document.getElementById("withdraw").classList.add("hidden");
     document.getElementById(tab).classList.remove("hidden");
   }
 
-  // Ads
-  function watchAd(url) {
-    window.open(url, "_blank");
-    setTimeout(() => {
-      balance += 0.0001;
-      updateBalance();
-      alert("You earned $0.0001!");
-    }, 5000);
+  // === Ads ===
+  function adClicked() {
+    // මූලින්ම link එක open වෙලා back උනොත් balance add වෙනවා
+    balance += 0.0001;
+    updateBalance();
+    alert("You earned $0.0001!");
   }
 
-  // Captcha
+  // === Captcha ===
   function generateCaptcha() {
     let a = Math.floor(Math.random()*10);
     let b = Math.floor(Math.random()*10);
@@ -165,6 +138,10 @@
       balance += 0.00015;
       updateBalance();
       document.getElementById("captchaMsg").innerText = "Correct! +$0.00015";
+
+      // Captcha submit → open ad link
+      window.open("https://www.revenuecpmgate.com/yc4zy360?key=668ce693eb60fa7cc11dd002b6a3adab", "_blank");
+
     } else {
       document.getElementById("captchaMsg").innerText = "Wrong!";
     }
@@ -172,21 +149,7 @@
     document.getElementById("captchaInput").value = "";
   }
 
-  // Tasks
-  function claimTask(id) {
-    if(tasksDone[id]) {
-      alert("Already completed!");
-      return;
-    }
-    balance += 0.01;
-    updateBalance();
-    tasksDone[id] = true;
-    localStorage.setItem("tasksDone", JSON.stringify(tasksDone));
-    document.getElementById("task"+id).style.display = "none";
-    alert("Task completed! +$0.01");
-  }
-
-  // Withdraw
+  // === Withdraw ===
   function withdraw() {
     let amount = parseFloat(document.getElementById("withdrawAmount").value);
     let method = document.getElementById("withdrawMethod").value;
@@ -212,25 +175,15 @@
     li.innerText = record;
     document.getElementById("history").appendChild(li);
 
-    // Telegram Bot Notification
-    let botToken = "YOUR_BOT_TOKEN"; // replace
-    let chatId = "@payment1267";
-    let text = encodeURIComponent(record);
-    fetch(`https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${chatId}&text=${text}`);
-
     alert("Withdraw success!");
   }
 
-  // Load history + tasks on startup
   window.onload = function() {
     updateBalance();
     history.forEach(rec => {
       let li = document.createElement("li");
       li.innerText = rec;
       document.getElementById("history").appendChild(li);
-    });
-    Object.keys(tasksDone).forEach(id => {
-      if(tasksDone[id]) document.getElementById("task"+id).style.display = "none";
     });
   }
 </script>
