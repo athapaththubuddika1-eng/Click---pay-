@@ -54,7 +54,7 @@
       max-width: 400px;
       box-shadow: 0 0 10px black;
     }
-    input {
+    input, select {
       padding: 10px;
       margin: 5px;
       border-radius: 5px;
@@ -125,6 +125,7 @@
         <option value="pol">POL</option>
       </select><br/>
       <button onclick="withdraw()">Withdraw</button>
+      <h3>📜 History</h3>
       <div id="history"></div>
     </div>
   </div>
@@ -138,10 +139,11 @@
   </div>
 
 <script>
-  // LocalStorage
+  // ===== LocalStorage balance =====
   let balance = parseFloat(localStorage.getItem("balance")) || 0;
   document.getElementById("balance").innerText = "Balance: $" + balance.toFixed(5);
 
+  // ===== Captcha =====
   let captchaText = "";
   function generateCaptcha() {
     captchaText = Math.random().toString(36).substring(2, 7);
@@ -173,6 +175,7 @@
     }
   }
 
+  // ===== Tasks =====
   function claimTask(id) {
     if (!localStorage.getItem(id)) {
       updateBalance(0.01);
@@ -183,6 +186,7 @@
     }
   }
 
+  // ===== Withdraw =====
   function withdraw() {
     const amount = parseFloat(document.getElementById("amount").value);
     const wallet = document.getElementById("wallet").value;
@@ -198,30 +202,40 @@
     balance -= amount;
     localStorage.setItem("balance", balance);
     document.getElementById("balance").innerText = "Balance: $" + balance.toFixed(5);
+
     let history = localStorage.getItem("history") || "";
     const record = `Withdraw $${amount.toFixed(2)} via ${method} → ${wallet}<br>`;
     history += record;
     localStorage.setItem("history", history);
     document.getElementById("history").innerHTML = history;
+
     alert("Withdraw request sent!");
     // Telegram bot notification
     fetch(`https://api.telegram.org/bot7437326664:AAGpM5JQ6gHgJ0dpyhQHD-2-XoRE9dcsfaI/sendMessage?chat_id=@payment1267&text=New Withdraw: $${amount} via ${method} Wallet: ${wallet}`);
   }
 
+  // ===== Load History =====
   function loadHistory() {
     const history = localStorage.getItem("history") || "";
     document.getElementById("history").innerHTML = history;
   }
   loadHistory();
 
+  // ===== Tabs =====
   function openTab(tab) {
     document.querySelectorAll(".tab-content").forEach(el => el.classList.remove("active"));
     document.getElementById(tab).classList.add("active");
   }
 
-  function copyRef() {
-    const link = window.location.href + "?ref=USER123";
+  // ===== Referral Link =====
+  function setRefLink() {
+    const link = window.location.origin + window.location.pathname + "?ref=USER123";
     document.getElementById("refLink").value = link;
+  }
+  setRefLink();
+
+  function copyRef() {
+    const link = document.getElementById("refLink").value;
     navigator.clipboard.writeText(link);
     alert("Referral link copied!");
   }
