@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Admin Panel - Ads Click Pay</title>
+  <style>
+    body { font-family: sans-serif; background: #101820; color: white; padding: 20px; }
+    table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+    th, td { border: 1px solid #444; padding: 8px; text-align: left; }
+    th { background: #222; }
+    h1 { color: #06b6d4; }
+  </style>
+</head>
+<body>
+  <h1>Withdraw Requests</h1>
+  {% if withdraws %}
+  <table>
+    <tr>
+      <th>User</th>
+      <th>Amount</th>
+      <th>Method</th>
+      <th>Wallet</th>
+      <th>Time</th>
+    </tr>
+    {% for w in withdraws %}
+    <tr>
+      <td>{{ w.userName }}<br><small>{{ w.userId }}</small></td>
+      <td>${{ "%.2f"|format(w.amount) }}</td>
+      <td>{{ w.method }}</td>
+      <td>{{ w.wallet }}</td>
+      <td>{{ w.time }}</td>
+    </tr>
+    {% endfor %}
+  </table>
+  {% else %}
+  <p>No withdraw requests yet.</p>
+  {% endif %}
+</body>
+</html>
