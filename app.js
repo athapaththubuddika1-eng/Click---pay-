@@ -1,4 +1,4 @@
-// app.js
+// app.js — Panda Technic (Updated Version)
 import { auth, db } from "./firebase.js";
 import {
   createUserWithEmailAndPassword,
@@ -9,16 +9,19 @@ import {
 } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-auth.js";
 
 import {
-  doc, setDoc, getDoc, updateDoc, increment, collection, query, where, getDocs, arrayUnion
+  doc, setDoc, getDoc, updateDoc, increment,
+  collection, query, where, getDocs, arrayUnion
 } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js";
 
+// ⚙️ Config
 const AD_LINK = "https://www.revenuecpmgate.com/dnm2jrcaj?key=c73c264e4447410ce55eb32960238eaa";
 const AD_REWARD = 0.0001;
 const CAPTCHA_REWARD = 0.00015;
 const WATCH_SECONDS = 5;
-const MIN_WITHDRAW = 0.1; // USDT
+const MIN_WITHDRAW = 0.1;
+const REF_REWARD = 0.01;
 
-// UI elements
+// UI references
 const authCard = document.getElementById("authCard");
 const dashCard = document.getElementById("dashCard");
 const historyCard = document.getElementById("historyCard");
@@ -59,19 +62,21 @@ let currentCaptcha = "";
 let watchTimer = null;
 let watchSeconds = 0;
 let currentUserDoc = null;
+let adStartTime = null;
 
-// helper: generate referral code
+// 🔹 Helper — generate referral code
 function genRefCode(uid) {
-  return "ACP" + uid.slice(0,6).toUpperCase();
+  return "PT" + uid.slice(0, 6).toUpperCase();
 }
 
-// set pending ref from URL (telegram mini app opens with ?start or ?ref)
-(function captureRefFromURL(){
+// 🔹 Capture referral from Telegram or link
+(function captureRefFromURL() {
   const params = new URLSearchParams(window.location.search);
   const ref = params.get('ref') || params.get('start') || params.get('u');
-  if(ref) localStorage.setItem('pendingRef', ref);
+  if (ref) localStorage.setItem('pendingRef', ref);
 })();
 
+// 🔹 UI control
 function showAuth() {
   authCard.classList.remove('hidden');
   dashCard.classList.add('hidden');
@@ -88,63 +93,54 @@ function showHistory() {
   historyCard.classList.remove('hidden');
 }
 
-// Auth flows
-registerBtn.addEventListener('click', async ()=>{
-  const name = (displayNameInput.value || "").trim();
-  const email = (emailInput.value || "").trim();
-  const password = (passwordInput.value || "").trim();
-  const ref = (refInput.value || "").trim() || localStorage.getItem('pendingRef');
+// 🔹 Register user
+registerBtn.addEventListener('click', async () => {
+  const name = displayNameInput.value.trim();
+  const email = emailInput.value.trim();
+  const password = passwordInput.value.trim();
+  const ref = refInput.value.trim() || localStorage.getItem('pendingRef');
 
-  if(!name || !email || !password){ alert('Fill name, email, password'); return; }
+  if (!name || !email || !password) return alert('Please fill all fields');
 
   try {
     const cred = await createUserWithEmailAndPassword(auth, email, password);
-    // update profile display name
     await updateProfile(cred.user, { displayName: name });
-
-    // create user doc
     const uid = cred.user.uid;
     const code = genRefCode(uid);
-    let initialBalance = 0;
     let referredBy = null;
 
-    if(ref) {
-      // check if valid referral code
-      const q = query(collection(db, "users"), where("refCode","==", ref));
+    if (ref) {
+      const q = query(collection(db, "users"), where("refCode", "==", ref));
       const snap = await getDocs(q);
-      if(!snap.empty){
-        // valid referral
+      if (!snap.empty) {
         referredBy = ref;
-        initialBalance = 0; // user doesn't get bonus per prior spec? earlier we set 0.01 to referrer; spec: "Ref code provided -> referrer gets $0.01"
-        // credit the referrer
         const refDoc = snap.docs[0];
-        await updateDoc(refDoc.ref, { balance: increment(0.01), referrals: arrayUnion(uid) });
+        await updateDoc(refDoc.ref, {
+          balance: increment(REF_REWARD),
+          referrals: arrayUnion(uid)
+        });
       }
     }
 
     await setDoc(doc(db, "users", uid), {
-      uid,
-      name,
-      email,
-      balance: initialBalance,
+      uid, name, email,
+      balance: 0,
       refCode: code,
       referredBy: referredBy || null,
       withdraws: [],
       adsWatched: 0,
+      referrals: [],
       createdAt: Date.now()
     });
 
-    alert('Registered — Welcome!');
-    // redirect to dashboard
-    // For Telegram Mini App: navigate back to app main or show
-    // show user UI
-    // automatically sign-in state listener will handle UI
+    alert('✅ Account created! Please login.');
   } catch (err) {
     alert(err.message);
   }
 });
 
-loginBtn.addEventListener('click', async ()=>{
+// 🔹 Login
+loginBtn.addEventListener('click', async () => {
   try {
     await signInWithEmailAndPassword(auth, emailInput.value.trim(), passwordInput.value.trim());
   } catch (err) {
@@ -152,72 +148,76 @@ loginBtn.addEventListener('click', async ()=>{
   }
 });
 
-logoutBtn.addEventListener('click', async ()=>{
+logoutBtn.addEventListener('click', async () => {
   await signOut(auth);
   showAuth();
 });
 
-// auth state listener
-onAuthStateChanged(auth, async (user)=>{
-  if(!user){ showAuth(); return; }
-  // load user doc
+// 🔹 Auth listener
+onAuthStateChanged(auth, async (user) => {
+  if (!user) return showAuth();
+
   const ud = await getDoc(doc(db, "users", user.uid));
-  if(!ud.exists()){
-    // create fallback doc
+  if (!ud.exists()) {
     const code = genRefCode(user.uid);
     await setDoc(doc(db, "users", user.uid), {
       uid: user.uid, name: user.displayName || user.email, email: user.email,
       balance: 0, refCode: code, withdraws: [], adsWatched: 0
     });
-    currentUserDoc = await getDoc(doc(db, "users", user.uid));
-  } else {
-    currentUserDoc = ud;
   }
-  // update UI
-  nameDisp.innerText = currentUserDoc.data().name || user.email;
-  balanceDisp.innerText = "$" + Number(currentUserDoc.data().balance || 0).toFixed(5);
-  myRef.value = currentUserDoc.data().refCode;
-  withdrawEmail.value = currentUserDoc.data().email || user.email;
 
+  currentUserDoc = await getDoc(doc(db, "users", user.uid));
+  const data = currentUserDoc.data();
+
+  nameDisp.innerText = data.name || user.email;
+  balanceDisp.innerText = "$" + Number(data.balance || 0).toFixed(5);
+  myRef.value = data.refCode;
+  withdrawEmail.value = data.email || user.email;
   showDash();
 });
 
-// AD logic
-openAdBtn.addEventListener('click', ()=>{
-  // open ad in new tab
+// 🔹 Ad view
+openAdBtn.addEventListener('click', () => {
   window.open(AD_LINK, '_blank');
-
-  // start watch timer in UI (counts up to WATCH_SECONDS)
-  watchSeconds = 0;
-  adTimerSpan.innerText = watchSeconds;
-  adTimerBtn.classList.remove('ghost');
+  adStartTime = Date.now();
+  adTimerSpan.innerText = WATCH_SECONDS;
   adTimerBtn.disabled = true;
-  watchTimer = setInterval(()=> {
-    watchSeconds++;
-    adTimerSpan.innerText = watchSeconds;
-    if(watchSeconds >= WATCH_SECONDS){
+
+  let remaining = WATCH_SECONDS;
+  watchTimer = setInterval(() => {
+    remaining--;
+    adTimerSpan.innerText = remaining;
+    if (remaining <= 0) {
       clearInterval(watchTimer);
       adTimerBtn.disabled = false;
-      // credit user in firestore
-      creditAd();
+      creditAd(true);
     }
   }, 1000);
 });
 
-async function creditAd(){
+async function creditAd(valid) {
   const user = auth.currentUser;
-  if(!user) return alert('Please login');
+  if (!user) return alert('Login required');
+
+  if (!valid) return alert('❌ Invalid click — Watch full ad 5 seconds!');
+  const diff = Date.now() - adStartTime;
+  if (diff < WATCH_SECONDS * 1000) return alert('⛔ You left early — no reward!');
+
   const uref = doc(db, "users", user.uid);
-  await updateDoc(uref, { balance: increment(AD_REWARD), adsWatched: increment(1) });
+  await updateDoc(uref, {
+    balance: increment(AD_REWARD),
+    adsWatched: increment(1)
+  });
   const snap = await getDoc(uref);
-  balanceDisp.innerText = "$" + Number(snap.data().balance || 0).toFixed(5);
-  alert(`+ $${AD_REWARD.toFixed(5)} (Ad credited)`);
+  balanceDisp.innerText = "$" + Number(snap.data().balance).toFixed(5);
+  alert(`✅ +$${AD_REWARD.toFixed(5)} added!`);
 }
 
-// CAPTCHA logic
-function genCaptcha(){
-  const chars='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
-  let s=''; for(let i=0;i<6;i++) s+=chars.charAt(Math.floor(Math.random()*chars.length));
+// 🔹 CAPTCHA
+function genCaptcha() {
+  const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+  let s = "";
+  for (let i = 0; i < 6; i++) s += chars[Math.floor(Math.random() * chars.length)];
   currentCaptcha = s;
   captchaCodeEl.innerText = currentCaptcha;
   captchaMsg.innerText = '';
@@ -225,122 +225,88 @@ function genCaptcha(){
 regenCaptcha.addEventListener('click', genCaptcha);
 genCaptcha();
 
-submitCaptcha.addEventListener('click', async ()=>{
-  const v = (captchaInput.value||'').trim().toUpperCase();
-  if(!v) return alert('Enter CAPTCHA');
-  if(v !== currentCaptcha) { captchaMsg.innerText = 'Incorrect — try again'; return; }
-  // open ad link and require watch time
+submitCaptcha.addEventListener('click', async () => {
+  const v = captchaInput.value.trim().toUpperCase();
+  if (!v) return alert('Enter CAPTCHA');
+  if (v !== currentCaptcha) return captchaMsg.innerText = '❌ Wrong CAPTCHA';
   window.open(AD_LINK, '_blank');
-  captchaMsg.innerText = 'Open ad — wait 5s to get credit';
-  // wait 5 seconds then credit
-  setTimeout(async ()=>{
+  captchaMsg.innerText = '⏳ Wait 5s and you’ll get reward';
+
+  setTimeout(async () => {
     const user = auth.currentUser;
-    if(!user){ alert('Login required'); return; }
+    if (!user) return alert('Login first!');
     const uref = doc(db, "users", user.uid);
     await updateDoc(uref, { balance: increment(CAPTCHA_REWARD) });
     const snap = await getDoc(uref);
-    balanceDisp.innerText = "$" + Number(snap.data().balance || 0).toFixed(5);
-    captchaMsg.innerText = 'CAPTCHA correct — credited!';
+    balanceDisp.innerText = "$" + Number(snap.data().balance).toFixed(5);
+    captchaMsg.innerText = '✅ Credited!';
     captchaInput.value = '';
     genCaptcha();
   }, WATCH_SECONDS * 1000);
 });
 
-// Withdraw button -> call serverless endpoint to perform FaucetPay API call & Telegram notify
-withdrawBtn.addEventListener('click', async ()=>{
+// 🔹 Withdraw system
+withdrawBtn.addEventListener('click', async () => {
   const user = auth.currentUser;
-  if(!user) return alert('Login required');
-
+  if (!user) return alert('Login first');
   const uref = doc(db, "users", user.uid);
   const snap = await getDoc(uref);
   const data = snap.data();
   const balance = Number(data.balance || 0);
+  if (balance < MIN_WITHDRAW) return alert(`Minimum withdraw $${MIN_WITHDRAW}`);
+  const femail = withdrawEmail.value.trim() || data.email;
 
-  if(balance < MIN_WITHDRAW) return alert(`Minimum withdraw $${MIN_WITHDRAW} required`);
-
-  const femail = (withdrawEmail.value || data.email || user.email || "").trim();
-  if(!femail) return alert('Enter FaucetPay email for payout');
-
-  // POST to serverless API /api/withdraw
   withdrawBtn.disabled = true;
-  withdrawMsg.innerText = 'Processing withdraw...';
-
+  withdrawMsg.innerText = 'Processing...';
   try {
     const res = await fetch('/api/withdraw', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        amount: balance.toString(), // send as string
-        to: femail,
-        currency: 'USDT',
-        uid: user.uid,
-        name: data.name || user.email
-      })
+      body: JSON.stringify({ amount: balance, to: femail, currency: 'USDT', uid: user.uid })
     });
     const json = await res.json();
-    if(res.ok && json.success){
-      // On success: clear user balance and add withdraw record
+    if (json.success) {
       await updateDoc(uref, {
         balance: 0,
-        withdraws: arrayUnion({
-          amount: balance,
-          to: femail,
-          at: Date.now(),
-          tx: json.tx || null
-        })
+        withdraws: arrayUnion({ amount: balance, to: femail, at: Date.now(), tx: json.tx || null })
       });
-      const afterSnap = await getDoc(uref);
-      balanceDisp.innerText = "$" + Number(afterSnap.data().balance || 0).toFixed(5);
-      withdrawMsg.innerText = 'Withdraw successful and sent to FaucetPay';
-      alert('Withdraw sent — check FaucetPay.'); 
+      withdrawMsg.innerText = '✅ Withdraw successful!';
     } else {
-      withdrawMsg.innerText = 'Withdraw failed: ' + (json.message || 'unknown');
-      alert('Withdraw failed: ' + (json.message || 'see console'));
-      console.error(json);
+      withdrawMsg.innerText = '❌ Withdraw failed';
     }
   } catch (err) {
     console.error(err);
-    alert('Withdraw request failed');
+    withdrawMsg.innerText = '⚠️ Error processing withdraw';
   } finally {
     withdrawBtn.disabled = false;
   }
 });
 
-// Withdraw history
-withdrawHistoryBtn.addEventListener('click', async ()=>{
+// 🔹 Withdraw history
+withdrawHistoryBtn.addEventListener('click', async () => {
   const user = auth.currentUser;
-  if(!user) return alert('Login required');
-  const uref = doc(db, "users", user.uid);
-  const snap = await getDoc(uref);
+  if (!user) return alert('Login required');
+  const snap = await getDoc(doc(db, "users", user.uid));
   const list = snap.data().withdraws || [];
-  historyList.innerHTML = list.length ? list.map(w=>`• ${w.amount ? ('$'+w.amount) : ''} → ${w.to || ''} @ ${w.at ? new Date(w.at).toLocaleString():''}`).join('<br>') : 'No withdraws';
+  historyList.innerHTML = list.length
+    ? list.map(w => `• $${w.amount} → ${w.to} (${new Date(w.at).toLocaleString()})`).join('<br>')
+    : 'No history';
   showHistory();
 });
-closeHistory.addEventListener('click', ()=> showDash());
+closeHistory.addEventListener('click', showDash);
 
-// copy referral
-copyRef.addEventListener('click', ()=>{
+// 🔹 Copy referral
+copyRef.addEventListener('click', () => {
   myRef.select();
-  navigator.clipboard.writeText(myRef.value).then(()=> alert('Referral copied'));
+  navigator.clipboard.writeText(myRef.value);
+  alert('Referral code copied!');
 });
 
-// Open Telegram (open in same window if inside Telegram Mini App)
-openTelegramBtn.addEventListener('click', ()=>{
-  // If running inside Telegram WebApp
-  try {
-    // prefer opening via Telegram WebApp interface if available
-    if(window.Telegram && window.Telegram.WebApp){
-      window.Telegram.WebApp.openTelegramLink(window.location.href);
-    } else {
-      // fallback: open app in new tab
-      window.open(window.location.href, '_blank');
-    }
-  } catch (e){
+// 🔹 Open Telegram (Mini App compatible)
+openTelegramBtn.addEventListener('click', () => {
+  if (window.Telegram?.WebApp) {
+    window.Telegram.WebApp.openTelegramLink(window.location.href);
+  } else {
     window.open(window.location.href, '_blank');
   }
 });
-
-// Utility getDoc reference
-function docRef(path){
-  return doc(db, path);
-}
